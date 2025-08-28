@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Test Client (with /socket prefix)</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .connected { background-color: #d4edda; color: #155724; }
+        .disconnected { background-color: #f8d7da; color: #721c24; }
+        .connecting { background-color: #fff3cd; color: #856404; }
+        .messages {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 8px;
+            background-color: white;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+        }
+        .message.error { border-left-color: #dc3545; }
+        .message.success { border-left-color: #28a745; }
+        .message.info { border-left-color: #17a2b8; }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        .endpoint-test {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .endpoint-test h3 { margin-top: 0; }
+        .endpoint-result {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .prefix-info {
+            background-color: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Socket.IO Test Client (with /socket prefix)</h1>
+        
+        <div class="prefix-info">
+            <h3>🔧 New Endpoint Structure</h3>
+            <p><strong>Socket.IO:</strong> <code>http://localhost:30080/socket/socket.io/</code></p>
+            <p><strong>WebSocket:</strong> <code>http://localhost:30080/socket/ws</code></p>
+            <p><strong>Health:</strong> <code>http://localhost:30080/health</code></p>
+            <p><strong>Status:</strong> <code>http://localhost:30080/status</code></p>
+        </div>
+        
+        <div class="status" id="connectionStatus">Disconnected</div>
+        
+        <div class="controls">
+            <button id="connectBtn" onclick="connect()">Connect</button>
+            <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
+            <button id="sendBtn" onclick="sendMessage()" disabled>Send Message</button>
+            <button id="testEndpointsBtn" onclick="testEndpoints()">Test HTTP Endpoints</button>
+        </div>
+        
+        <div class="endpoint-test">
+            <h3>🔍 HTTP Endpoint Tests</h3>
+            <div id="endpointResults"></div>
+        </div>
+        
+        <div class="messages" id="messages">
+            <div class="message info">Ready to connect to Socket.IO server with /socket prefix...</div>
+        </div>
+    </div>
+
+    <script>
+        // Socket.IO client with /socket prefix
+        const socket = io('http://localhost:30080/socket', {
+            transports: ['websocket', 'polling'],
+            timeout: 20000
+        });
+        
+        // DOM elements
+        const connectionStatus = document.getElementById('connectionStatus');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        const testEndpointsBtn = document.getElementById('testEndpointsBtn');
+        const messages = document.getElementById('messages');
+        const endpointResults = document.getElementById('endpointResults');
+        
+        // Connection status
+        let isConnected = false;
+        
+        // Update connection status
+        function updateConnectionStatus(status, className) {
+            connectionStatus.textContent = status;
+            connectionStatus.className = `status ${className}`;
+        }
+        
+        // Add message to display
+        function addMessage(text, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        // Socket.IO event handlers
+        socket.on('connect', () => {
+            isConnected = true;
+            updateConnectionStatus('Connected', 'connected');
+            connectBtn.disabled = true;
+            disconnectBtn.disabled = false;
+            sendBtn.disabled = false;
+            addMessage('Connected to Socket.IO server!', 'success');
+            addMessage(`Session ID: ${socket.id}`, 'info');
+        });
+        
+        socket.on('disconnect', () => {
+            isConnected = false;
+            updateConnectionStatus('Disconnected', 'disconnected');
+            connectBtn.disabled = false;
+            disconnectBtn.disabled = true;
+            sendBtn.disabled = true;
+            addMessage('Disconnected from Socket.IO server', 'error');
+        });
+        
+        socket.on('connect_error', (error) => {
+            addMessage(`Connection error: ${error.message}`, 'error');
+        });
+        
+        socket.on('message', (data) => {
+            addMessage(`📨 Message: ${JSON.stringify(data)}`, 'success');
+        });
+        
+        socket.on('update', (data) => {
+            addMessage(`🔄 Update: ${JSON.stringify(data)}`, 'success');
+        });
+        
+        // Control functions
+        function connect() {
+            if (!isConnected) {
+                updateConnectionStatus('Connecting...', 'connecting');
+                socket.connect();
+            }
+        }
+        
+        function disconnect() {
+            if (isConnected) {
+                socket.disconnect();
+            }
+        }
+        
+        function sendMessage() {
+            if (isConnected) {
+                const message = {
+                    text: 'Hello from browser client!',
+                    timestamp: new Date().toISOString()
+                };
+                socket.emit('test_message', message);
+                addMessage(`📤 Sent: ${JSON.stringify(message)}`, 'info');
+            }
+        }
+        
+        // Test HTTP endpoints
+        async function testEndpoints() {
+            endpointResults.innerHTML = '<div class="endpoint-result">Testing endpoints...</div>';
+            
+            try {
+                // Test health endpoint
+                const healthResponse = await fetch('http://localhost:30080/health');
+                const healthData = await healthResponse.json();
+                
+                // Test status endpoint
+                const statusResponse = await fetch('http://localhost:30080/status');
+                const statusData = await statusResponse.json();
+                
+                endpointResults.innerHTML = `
+                    <h4>✅ Health Endpoint (/health)</h4>
+                    <div class="endpoint-result">${JSON.stringify(healthData, null, 2)}</div>
+                    
+                    <h4>✅ Status Endpoint (/status)</h4>
+                    <div class="endpoint-result">${JSON.stringify(statusData, null, 2)}</div>
+                `;
+                
+                addMessage('HTTP endpoints tested successfully', 'success');
+                
+            } catch (error) {
+                endpointResults.innerHTML = `
+                    <h4>❌ Endpoint Test Failed</h4>
+                    <div class="endpoint-result">Error: ${error.message}</div>
+                `;
+                addMessage(`HTTP endpoint test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        // Auto-connect on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (!isConnected) {
+                    addMessage('Auto-connecting to server with /socket prefix...', 'info');
+                    connect();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 
