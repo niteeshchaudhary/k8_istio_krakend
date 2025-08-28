@@ -47,10 +47,18 @@ spec:
         port:
           number: 8080
   
-  # All other /socket/* endpoints via KrakenD (for traffic management)
+  # HTTP endpoints via KrakenD (for traffic management)
   - match:
     - uri:
-        prefix: /socket
+        prefix: /socket/health
+    route:
+    - destination:
+        host: krakend
+        port:
+          number: 8080
+  - match:
+    - uri:
+        prefix: /socket/status
     route:
     - destination:
         host: krakend
