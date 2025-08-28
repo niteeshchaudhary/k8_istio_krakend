@@ -45,6 +45,38 @@ data:
               "timeout": "5s"
             }
           ]
+        },
+        {
+          "endpoint": "/socket/ws",
+          "method": "GET",
+          "backend": [
+            {
+              "url_pattern": "/ws",
+              "host": ["http://ws-server.krakend-test.svc.cluster.local:8080"],
+              "timeout": "5s"
+            }
+          ],
+          "extra_config": {
+            "transport": {
+              "websocket": true
+            }
+          }
+        },
+        {
+          "endpoint": "/socket/socket.io",
+          "method": "GET",
+          "backend": [
+            {
+              "url_pattern": "/socket.io",
+              "host": ["http://ws-server.krakend-test.svc.cluster.local:8080"],
+              "timeout": "5s"
+            }
+          ],
+          "extra_config": {
+            "transport": {
+              "websocket": true
+            }
+          }
         }
       ]
     }

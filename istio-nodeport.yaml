@@ -31,40 +31,10 @@ spec:
   gateways:
   - krakend-gateway
   http:
-  # Socket.IO endpoint - direct routing (bypasses KrakenD for optimal performance)
+  # All /socket/* endpoints via KrakenD (including WebSocket support)
   - match:
     - uri:
-        prefix: /socket/socket.io
-    route:
-    - destination:
-        host: ws-server
-        port:
-          number: 8080
-  
-  # WebSocket endpoint - direct routing (bypasses KrakenD for WebSocket upgrades)
-  - match:
-    - uri:
-        prefix: /socket/ws
-    rewrite:
-      uri: /ws
-    route:
-    - destination:
-        host: ws-server
-        port:
-          number: 8080
-  
-  # HTTP endpoints via KrakenD (for traffic management)
-  - match:
-    - uri:
-        prefix: /socket/health
-    route:
-    - destination:
-        host: krakend
-        port:
-          number: 8080
-  - match:
-    - uri:
-        prefix: /socket/status
+        prefix: /socket
     route:
     - destination:
         host: krakend
