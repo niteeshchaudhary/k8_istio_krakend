@@ -1,0 +1,10 @@
+---
+# Minimal values for Istiod
+revision: "1-25-0"
+meshConfig:
+  accessLogFile: /dev/stdout
+pilot:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi

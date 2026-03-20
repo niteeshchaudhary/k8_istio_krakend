@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kraken-config
+spec:
+  hosts:
+  - kraken-config # Internal host if accessed via Krakend or Istio Mesh
+  http:
+  - route:
+    - destination:
+        host: kraken-config
+        port:
+          number: 5000

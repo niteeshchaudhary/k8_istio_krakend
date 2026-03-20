@@ -16,6 +16,26 @@ spec:
         app: krakend
         sidecar.istio.io/inject: "true"
     spec:
+      initContainers:
+      - name: fetch-config
+        image: curlimages/curl:latest
+        command:
+        - "/bin/sh"
+        - "-c"
+        - |
+          echo "Fetching config from kraken-config..."
+          if curl -s -f http://kraken-config.kraken-config.svc.cluster.local:5000/api/krakend-config > /tmp/fetched.json; then
+            echo "Successfully fetched dynamic config"
+            cp /tmp/fetched.json /etc/krakend/krakend.json
+          else
+            echo "Fetch failed, using default config"
+            cp /etc/krakend-default/krakend.json /etc/krakend/krakend.json
+          fi
+        volumeMounts:
+        - name: krakend-config-default-vol
+          mountPath: /etc/krakend-default
+        - name: krakend-config-vol
+          mountPath: /etc/krakend
       containers:
       - name: krakend
         image: krakend/krakend:latest
@@ -34,6 +54,8 @@ spec:
             cpu: 500m
             memory: 512Mi
       volumes:
-      - name: krakend-config-vol
+      - name: krakend-config-default-vol
         configMap:
           name: krakend-config
+      - name: krakend-config-vol
+        emptyDir: {}

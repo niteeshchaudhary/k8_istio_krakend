@@ -1,0 +1,3 @@
+---
+# Minimal values for Istio base
+defaultRevision: "1-25-0"

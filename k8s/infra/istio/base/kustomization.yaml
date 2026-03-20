@@ -2,4 +2,25 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - gateway.yaml
- # Add your Istio base manifests here
+
+helmCharts:
+  - name: base
+    releaseName: istio-base
+    version: 1.25.0
+    repo: https://istio-release.storage.googleapis.com/charts
+    namespace: istio-system
+    valuesFile: values-base.yaml
+  - name: istiod
+    releaseName: istiod-1-25-0
+    version: 1.25.0
+    repo: https://istio-release.storage.googleapis.com/charts
+    namespace: istio-system
+    valuesFile: values-istiod.yaml
+    includeCRDs: true
+  - name: gateway
+    releaseName: istio-ingressgateway
+    version: 1.25.0
+    repo: https://istio-release.storage.googleapis.com/charts
+    namespace: istio-system
+    valuesFile: values-gateway.yaml
+

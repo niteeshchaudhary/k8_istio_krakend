@@ -5,4 +5,5 @@ resources:
   - infra/krakend.yaml
   - apps/backend.yaml
   - apps/frontend.yaml
+  - apps/kraken-config.yaml
 
