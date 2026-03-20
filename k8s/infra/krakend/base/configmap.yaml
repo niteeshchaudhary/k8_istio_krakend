@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: krakend-config
+  namespace: krakend
+data:
+  krakend.json: |
+    {
+      "version": 3,
+      "port": 8080,
+      "timeout": "3000ms",
+      "cache_ttl": "300s",
+      "name": "My API Gateway",
+      "endpoints": [
+        {
+          "endpoint": "/api/backend",
+          "method": "GET",
+          "backend": [
+            {
+              "url_pattern": "/",
+              "host": [
+                "http://backend.backend.svc.cluster.local:8080"
+              ]
+            }
+          ]
+        },
+        {
+          "endpoint": "/frontend",
+          "method": "GET",
+          "backend": [
+            {
+              "url_pattern": "/",
+              "host": [
+                "http://frontend.frontend.svc.cluster.local:80"
+              ]
+            }
+          ]
+        }
+      ]
+    }

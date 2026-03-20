@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: krakend
+  namespace: krakend
+  labels:
+    app: krakend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: krakend
+  template:
+    metadata:
+      labels:
+        app: krakend
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: krakend
+        image: krakend/krakend:latest
+        ports:
+        - containerPort: 8080
+        args: ["run", "-c", "/etc/krakend/krakend.json", "-d"]
+        volumeMounts:
+        - name: krakend-config-vol
+          mountPath: /etc/krakend
+          readOnly: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      volumes:
+      - name: krakend-config-vol
+        configMap:
+          name: krakend-config

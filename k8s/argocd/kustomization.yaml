@@ -3,4 +3,6 @@ kind: Kustomization
 resources:
   - infra/istio.yaml
   - infra/krakend.yaml
-  - apps/ws-server.yaml
+  - apps/backend.yaml
+  - apps/frontend.yaml
+
