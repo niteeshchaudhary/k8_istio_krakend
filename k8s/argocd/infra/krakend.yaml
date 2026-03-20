@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: krakend-gateway
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/niteesh-chaudhary/k8_istio_krakend.git'
+    targetRevision: HEAD
+    path: k8s/infra/krakend/base
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: krakend
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,32 @@
+global:
+  priority-ClassName: cluster-infra
+  affinity:
+    nodeAffinity:
+      matchExpressions:
+        - key: type
+          operator: In
+          values:
+            - infra
+
+  tolerations:
+    - key: type
+      value: infra
+      effect: NoSchedule
+
+notifications:
+  logLevel: warning
+
+configs:
+  params:
+    server.insecure: "true"
+    controller.log.level: warning
+    reposerver.log.level: warning
+    server.log.level: warning
+
+  cm:
+    exec.enabled: "true"
+    timeout.reconciliation: 30s
+
+  rbac:
+    policy.csv: |
+      p, role:admin, exec, create, */*, allow
