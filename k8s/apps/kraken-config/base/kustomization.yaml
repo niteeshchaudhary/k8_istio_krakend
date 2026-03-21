@@ -4,3 +4,10 @@ resources:
   - deployment.yaml
   - service.yaml
   - virtualservice.yaml
+
+secretGenerator:
+  - name: db-credentials
+    literals:
+      - DATABASE_URL=postgresql://appuser:apppassword@pg-cluster-rw.postgres.svc.cluster.local:5432/appuser
+    options:
+      disableNameSuffixHash: true
