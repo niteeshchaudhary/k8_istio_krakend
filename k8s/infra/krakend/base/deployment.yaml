@@ -38,7 +38,7 @@ spec:
           mountPath: /etc/krakend
       containers:
       - name: krakend
-        image: krakend/krakend:latest
+        image: krakend:latest
         ports:
         - containerPort: 8080
         args: ["run", "-c", "/etc/krakend/krakend.json", "-d"]
