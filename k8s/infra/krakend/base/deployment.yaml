@@ -63,6 +63,9 @@ spec:
         - name: krakend-config-vol
           mountPath: /etc/krakend
           readOnly: true
+        - name: krakend-config-default-vol
+          mountPath: /etc/krakend-default
+          readOnly: true
         resources:
           requests:
             cpu: 100m

@@ -6,35 +6,34 @@ metadata:
 data:
   krakend.json: |
     {
-      "version": 3,
-      "port": "8080",
-      "timeout": "3000ms",
-      "cache_ttl": "300s",
-      "name": "My API Gateway",
-      "endpoints": [
+  "version": 2,
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "name": "My API Gateway",
+  "endpoints": [
+    {
+      "endpoint": "/api/backend",
+      "method": "GET",
+      "backend": [
         {
-          "endpoint": "/api/backend",
-          "method": "GET",
-          "backend": [
-            {
-              "url_pattern": "/",
-              "host": [
-                "http://backend.backend.svc.cluster.local:8080"
-              ]
-            }
+          "url_pattern": "/",
+          "host": [
+            "http://backend.backend.svc.cluster.local"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "endpoint": "/frontend",
+      "method": "GET",
+      "backend": [
         {
-          "endpoint": "/frontend",
-          "method": "GET",
-          "backend": [
-            {
-              "url_pattern": "/",
-              "host": [
-                "http://frontend.frontend.svc.cluster.local:80"
-              ]
-            }
+          "url_pattern": "/",
+          "host": [
+            "http://frontend.frontend.svc.cluster.local"
           ]
         }
       ]
     }
+  ]
+}
