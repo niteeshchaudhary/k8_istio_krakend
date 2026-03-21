@@ -10,4 +10,7 @@ resources:
   - apps/frontend.yaml
   - apps/kraken-config.yaml
   - apps/postgres.yaml
+  - argocd-cm.yaml
+  - argocd-rbac-cm.yaml
+  - argocd-server-exec-rbac.yaml
 
