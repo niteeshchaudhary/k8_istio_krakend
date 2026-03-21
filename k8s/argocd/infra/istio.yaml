@@ -17,17 +17,18 @@ spec:
   ignoreDifferences:
     - group: admissionregistration.k8s.io
       kind: ValidatingWebhookConfiguration
-      jsonPointers:
-        - /webhooks/0/failurePolicy
-        - /webhooks/0/clientConfig/caBundle
+      jqPathExpressions:
+        - .webhooks[].failurePolicy
+        - .webhooks[].clientConfig.caBundle
     - group: admissionregistration.k8s.io
       kind: MutatingWebhookConfiguration
-      jsonPointers:
-        - /webhooks/0/failurePolicy
-        - /webhooks/0/clientConfig/caBundle
+      jqPathExpressions:
+        - .webhooks[].failurePolicy
+        - .webhooks[].clientConfig.caBundle
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true
