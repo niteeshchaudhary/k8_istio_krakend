@@ -6,7 +6,8 @@ metadata:
 data:
   krakend.json: |
     {
-      "version": 2,
+      "version": 3,
+      "port": 8080,
       "timeout": "3000ms",
       "cache_ttl": "300s",
       "name": "My API Gateway",
@@ -18,7 +19,7 @@ data:
             {
               "url_pattern": "/",
               "host": [
-                "http://backend.backend.svc.cluster.local"
+                "http://backend.backend.svc.cluster.local:8080"
               ]
             }
           ]
@@ -30,7 +31,7 @@ data:
             {
               "url_pattern": "/",
               "host": [
-                "http://frontend.frontend.svc.cluster.local"
+                "http://frontend.frontend.svc.cluster.local:80"
               ]
             }
           ]
