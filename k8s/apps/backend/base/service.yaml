@@ -6,10 +6,14 @@ metadata:
     app: backend
 spec:
   ports:
-  - port: 8080
+  - port: 80
     targetPort: 8080
     protocol: TCP
     name: http
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http-alt
   selector:
     app: backend
   type: ClusterIP
