@@ -13,7 +13,7 @@ spec:
     path: k8s/environments/dev/apps/postgres
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: default
+    namespace: postgres
   syncPolicy:
     automated:
       prune: true

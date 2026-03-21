@@ -22,19 +22,16 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: "postgres"
         - name: SPRING_DATASOURCE_URL
-          valueFrom:
-            secretKeyRef:
-              name: pg-cluster-app
-              key: jdbc-uri
+          value: "jdbc:postgresql://pg-cluster-rw.postgres.svc.cluster.local:5432/app"
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
-              name: pg-cluster-app
+              name: shared-db-secret
               key: username
         - name: SPRING_DATASOURCE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: pg-cluster-app
+              name: shared-db-secret
               key: password
         ports:
         - containerPort: 8080

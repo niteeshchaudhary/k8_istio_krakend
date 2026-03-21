@@ -5,3 +5,11 @@ resources:
   - service.yaml
   - virtualservice.yaml
 
+secretGenerator:
+  - name: shared-db-secret
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - username=appuser
+      - password=apppassword
+

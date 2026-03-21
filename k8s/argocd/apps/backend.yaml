@@ -13,7 +13,7 @@ spec:
     path: k8s/environments/dev/apps/backend
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: default
+    namespace: backend
   syncPolicy:
     automated:
       prune: true
