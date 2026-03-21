@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: krakend-gateway
+  name: root-bootstrap
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,13 +10,27 @@ spec:
   source:
     repoURL: 'https://github.com/niteeshchaudhary/k8_istio_krakend.git'
     targetRevision: HEAD
-    path: k8s/environments/dev/infra/krakend
+    path: k8s/argocd
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: krakend
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-k8-istio-krakend-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: git
+  url: https://github.com/niteeshchaudhary/k8_istio_krakend.git
+  insecure: "true"  # This disables the TLS/x509 certificate check

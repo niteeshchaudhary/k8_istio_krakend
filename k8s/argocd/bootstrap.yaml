@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/niteesh-chaudhary/k8_istio_krakend.git'  # Adjust to your repo URL
+    repoURL: 'https://github.com/niteeshchaudhary/k8_istio_krakend.git'  # Adjust to your repo URL
     targetRevision: HEAD
     path: k8s/argocd
   destination:
