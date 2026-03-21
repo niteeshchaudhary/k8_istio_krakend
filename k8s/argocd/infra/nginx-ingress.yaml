@@ -1,26 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio-gateway
+  name: nginx-ingress
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    chart: gateway
-    repoURL: https://istio-release.storage.googleapis.com/charts
-    targetRevision: 1.25.0
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.11.2
     helm:
-      skipSchemaValidation: true
-      releaseName: istio-ingressgateway
-      valuesObject:
-        revision: "1-25-0"
-        service:
-          type: ClusterIP
+      values: |
+        controller:
+          watchIngressWithoutClass: true
+          publishService:
+            enabled: true
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: istio-system
+    namespace: ingress-nginx
   syncPolicy:
     automated:
       prune: true

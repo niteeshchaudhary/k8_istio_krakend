@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - infra/istio.yaml
   - infra/istio-gateway.yaml
+  - infra/nginx-ingress.yaml
   - infra/krakend.yaml
   - infra/cnpg.yaml
   - apps/backend.yaml
