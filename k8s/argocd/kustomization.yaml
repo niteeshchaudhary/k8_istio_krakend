@@ -4,7 +4,9 @@ resources:
   - infra/istio.yaml
   - infra/istio-gateway.yaml
   - infra/krakend.yaml
+  - infra/cnpg.yaml
   - apps/backend.yaml
   - apps/frontend.yaml
   - apps/kraken-config.yaml
+  - apps/postgres.yaml
 
