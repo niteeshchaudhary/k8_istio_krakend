@@ -23,13 +23,30 @@ spec:
         - "/bin/sh"
         - "-c"
         - |
-          echo "Fetching config from kraken-config..."
-          if curl -s -f http://kraken-config.kraken-config.svc.cluster.local:5000/api/krakend-config > /tmp/fetched.json; then
-            echo "Successfully fetched dynamic config"
-            cp /tmp/fetched.json /etc/krakend/krakend.json
-          else
-            echo "Fetch failed, using default config"
+          # The address of your config service
+          CONFIG_URL="http://kraken-config.kraken-config.svc.cluster.local:5000/api/krakend-config"
+          
+          echo "Waiting for kraken-config to be ready..."
+          # Try to fetch up to 10 times with a 2-second delay
+          for i in $(seq 1 10); do
+            echo "Attempt $i..."
+            if curl -s -f "$CONFIG_URL" > /tmp/fetched.json; then
+              if [ -s /tmp/fetched.json ]; then
+                echo "Successfully fetched dynamic config after $i attempts"
+                cp /tmp/fetched.json /etc/krakend/krakend.json
+                exit 0
+              fi
+            fi
+            echo "Attempt $i failed, retrying in 3s..."
+            sleep 3
+          done
+
+          echo "Warning: kraken-config did not become ready in time. Using default."
+          if [ -f /etc/krakend-default/krakend.json ]; then
             cp /etc/krakend-default/krakend.json /etc/krakend/krakend.json
+          else
+            echo "Error: Default config not found at /etc/krakend-default/krakend.json"
+            exit 1
           fi
         volumeMounts:
         - name: krakend-config-default-vol
@@ -38,7 +55,7 @@ spec:
           mountPath: /etc/krakend
       containers:
       - name: krakend
-        image: krakend:latest
+        image: krakend/krakend:latest
         ports:
         - containerPort: 8080
         args: ["run", "-c", "/etc/krakend/krakend.json", "-d"]
