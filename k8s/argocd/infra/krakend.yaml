@@ -11,8 +11,6 @@ spec:
     repoURL: 'https://github.com/niteeshchaudhary/k8_istio_krakend.git'
     targetRevision: HEAD
     path: k8s/environments/dev/infra/krakend
-    kustomize:
-      buildOptions: --enable-helm
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: krakend
