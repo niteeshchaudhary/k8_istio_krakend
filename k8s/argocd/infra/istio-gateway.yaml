@@ -17,7 +17,7 @@ spec:
       valuesObject:
         revision: "1-25-0"
         service:
-          type: LoadBalancer
+          type: ClusterIP
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: istio-system
