@@ -8,18 +8,18 @@ data:
     {
       "version": 3,
       "port": 8080,
-      "timeout": "3000ms",
+      "timeout": "10000ms",
       "cache_ttl": "300s",
       "name": "My API Gateway",
       "endpoints": [
         {
-          "endpoint": "/api/backend",
-          "method": "GET",
+          "endpoint": "/api/auth/register",
+          "method": "POST",
           "backend": [
             {
-              "url_pattern": "/",
+              "url_pattern": "/api/auth/register",
               "host": [
-                "http://backend.backend.svc.cluster.local:8080"
+                "http://backend.backend"
               ]
             }
           ]
@@ -27,11 +27,13 @@ data:
         {
           "endpoint": "/frontend",
           "method": "GET",
+          "output_encoding": "no-op",
           "backend": [
             {
               "url_pattern": "/",
+              "encoding": "no-op",
               "host": [
-                "http://frontend.frontend.svc.cluster.local:80"
+                "http://frontend.frontend"
               ]
             }
           ]
