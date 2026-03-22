@@ -34,7 +34,7 @@ spec:
               name: shared-db-secret
               key: password
         ports:
-        - containerPort: 8080
+        - containerPort: 8093
         resources:
           requests:
             cpu: 200m
