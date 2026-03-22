@@ -4,7 +4,7 @@ metadata:
   name: frontend
 spec:
   hosts:
-  - frontend
+  - myapp
   http:
   - route:
     - destination:
