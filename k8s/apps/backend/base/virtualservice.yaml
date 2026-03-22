@@ -6,10 +6,11 @@ spec:
   gateways:
     - istio-system/main-gateway
   hosts:
-    - mybackend # Internal host if accessed via Krakend or Istio Mesh
+    - mybackend
+    - mybackend.backend
   http:
     - route:
       - destination:
-          host: backend
+          host: backend.backend.svc.cluster.local
           port:
             number: 8080

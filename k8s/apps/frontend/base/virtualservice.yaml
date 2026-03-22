@@ -7,9 +7,10 @@ spec:
     - istio-system/main-gateway
   hosts:
     - myfrontend
+    - myfrontend.frontend
   http:
     - route:
       - destination:
-          host: frontend
+          host: frontend.frontend.svc.cluster.local
           port:
             number: 80
