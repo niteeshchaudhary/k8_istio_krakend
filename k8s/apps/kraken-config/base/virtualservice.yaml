@@ -3,11 +3,13 @@ kind: VirtualService
 metadata:
   name: kraken-config
 spec:
+  gateways:
+    - istio-system/main-gateway
   hosts:
-  - kraken-config # Internal host if accessed via Krakend or Istio Mesh
+    - mykraken-config # Internal host if accessed via Krakend or Istio Mesh
   http:
-  - route:
-    - destination:
-        host: kraken-config
-        port:
-          number: 5000
+    - route:
+      - destination:
+          host: kraken-config
+          port:
+            number: 5000

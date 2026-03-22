@@ -3,11 +3,13 @@ kind: VirtualService
 metadata:
   name: backend
 spec:
+  gateways:
+    - istio-system/main-gateway
   hosts:
-  - backend # Internal host if accessed via Krakend or Istio Mesh
+    - mybackend # Internal host if accessed via Krakend or Istio Mesh
   http:
-  - route:
-    - destination:
-        host: backend
-        port:
-          number: 8080
+    - route:
+      - destination:
+          host: backend
+          port:
+            number: 8080

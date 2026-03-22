@@ -3,11 +3,13 @@ kind: VirtualService
 metadata:
   name: frontend
 spec:
+  gateways:
+    - istio-system/main-gateway
   hosts:
-  - myapp
+    - myfrontend
   http:
-  - route:
-    - destination:
-        host: frontend
-        port:
-          number: 80
+    - route:
+      - destination:
+          host: frontend
+          port:
+            number: 80
