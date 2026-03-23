@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-gateway-v127
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    chart: gateway
+    repoURL: https://istio-release.storage.googleapis.com/charts
+    targetRevision: 1.27.0
+    helm:
+      skipSchemaValidation: true
+      releaseName: istio-ingressgateway-v127
+      valuesObject:
+        revision: "1-27-0"
+        service:
+          type: ClusterIP
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: cluster-infra
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
