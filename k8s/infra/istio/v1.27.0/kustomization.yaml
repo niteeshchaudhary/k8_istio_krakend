@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - gateway.yaml
-  - ingress.yaml
 
 helmCharts:
   - name: base
