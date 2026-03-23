@@ -1,0 +1,12 @@
+---
+# Minimal values for Istiod
+revision: "1-27-0"
+global:
+  istioNamespace: cluster-infra
+meshConfig:
+  accessLogFile: /dev/stdout
+pilot:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi

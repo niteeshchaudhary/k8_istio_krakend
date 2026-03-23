@@ -1,0 +1,5 @@
+---
+# Minimal values for Istio base
+defaultRevision: "1-27-0"
+global:
+  istioNamespace: cluster-infra

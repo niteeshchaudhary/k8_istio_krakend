@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - gateway.yaml
+  - ingress.yaml
+
+helmCharts:
+  - name: base
+    releaseName: istio-base
+    version: 1.27.0
+    repo: https://istio-release.storage.googleapis.com/charts
+    namespace: cluster-infra
+    valuesFile: values-base.yaml
+  - name: istiod
+    releaseName: istiod-1-27-0
+    version: 1.27.0
+    repo: https://istio-release.storage.googleapis.com/charts
+    namespace: cluster-infra
+    valuesFile: values-istiod.yaml
+
+
