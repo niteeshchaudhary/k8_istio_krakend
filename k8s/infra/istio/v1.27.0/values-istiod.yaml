@@ -5,6 +5,9 @@ global:
   istioNamespace: cluster-infra
 meshConfig:
   accessLogFile: /dev/stdout
+  discoverySelectors:
+    - matchLabels:
+        istio.io/rev: 1-27-0
 pilot:
   resources:
     requests:
