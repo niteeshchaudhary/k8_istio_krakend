@@ -5,12 +5,12 @@ resources:
   - ingress.yaml
 
 helmCharts:
-  - name: base
-    releaseName: istio-base
-    version: 1.25.0
-    repo: https://istio-release.storage.googleapis.com/charts
-    namespace: istio-system
-    valuesFile: values-base.yaml
+#  - name: base
+#    releaseName: istio-base
+#    version: 1.25.0
+#    repo: https://istio-release.storage.googleapis.com/charts
+#    namespace: istio-system
+#    valuesFile: values-base.yaml
   - name: istiod
     releaseName: istiod-1-25-0
     version: 1.25.0
