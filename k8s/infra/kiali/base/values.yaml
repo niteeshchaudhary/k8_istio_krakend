@@ -6,4 +6,4 @@ auth:
 # default is http://prometheus-server.prometheus-system.svc.cluster.local:80
 external_services:
   prometheus:
-    url: "http://prometheus-server.prometheus-system.svc.cluster.local:80"
+    url: "http://prometheus.monitoring.svc.cluster.local:9090"
