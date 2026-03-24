@@ -7,7 +7,6 @@ spec:
   gateways:
     - istio-system/main-gateway
   hosts:
-    - "api.krakend.local"
     - "*"
   http:
     - route:
