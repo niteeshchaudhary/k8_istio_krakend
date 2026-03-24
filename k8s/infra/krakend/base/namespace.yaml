@@ -3,5 +3,4 @@ kind: Namespace
 metadata:
   name: krakend
   labels:
-    istio-injection: enabled
     istio.io/rev: 1-25-0
