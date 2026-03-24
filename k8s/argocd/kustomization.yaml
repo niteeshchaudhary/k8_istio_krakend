@@ -9,9 +9,7 @@ resources:
   - infra/krakend.yaml
   - infra/kiali-infra.yaml
   - infra/cnpg.yaml
-  - infra/monitoring-namespace.yaml
-  - infra/prometheus.yaml
-  - infra/grafana.yaml
+  - infra/monitoring.yaml
   - apps/backend.yaml
   - apps/frontend.yaml
   - apps/kraken-config.yaml
