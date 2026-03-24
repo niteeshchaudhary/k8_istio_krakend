@@ -168,7 +168,7 @@ data:
       istio:
         root_namespace: istio-system
       prometheus:
-        url: http://prometheus-server.prometheus-system.svc.cluster.local:80
+        url: http://prometheus.monitoring.svc.cluster.local:9090
     identity:
       cert_file: ""
       private_key_file: ""
