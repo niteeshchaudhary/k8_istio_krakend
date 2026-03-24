@@ -1,0 +1,9 @@
+auth:
+  strategy: "anonymous"
+
+# External Prometheus configuration
+# If you have prometheus installed, point Kiali to it.
+# default is http://prometheus-server.prometheus-system.svc.cluster.local:80
+external_services:
+  prometheus:
+    url: "http://prometheus-server.prometheus-system.svc.cluster.local:80"
