@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: backend
   labels:
-    istio.io/rev: 1-25-0
+    istio-injection: disabled
