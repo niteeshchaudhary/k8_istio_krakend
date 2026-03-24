@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: krakend
+  namespace: krakend
+spec:
+  gateways:
+    - istio-system/main-gateway
+  hosts:
+    - "api.krakend.local"
+    - "*"
+  http:
+    - route:
+      - destination:
+          host: krakend-svc
+          port:
+            number: 80
