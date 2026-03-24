@@ -6,8 +6,7 @@ spec:
   gateways:
     - istio-system/main-gateway
   hosts:
-    - mybackend
-    - mybackend.backend
+    - backend
   http:
     - route:
       - destination:

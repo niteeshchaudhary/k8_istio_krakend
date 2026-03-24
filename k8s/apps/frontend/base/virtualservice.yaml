@@ -6,8 +6,7 @@ spec:
   gateways:
     - istio-system/main-gateway
   hosts:
-    - myfrontend
-    - myfrontend.frontend
+    - frontend
   http:
     - route:
       - destination:
