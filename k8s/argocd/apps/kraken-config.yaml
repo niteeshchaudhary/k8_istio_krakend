@@ -18,5 +18,12 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kraken-config
+  labels:
+    istio-injection: enabled
+    istio.io/rev: 1-25-0
