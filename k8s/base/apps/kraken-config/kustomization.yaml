@@ -4,6 +4,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - virtualservice.yaml
+  - namespace.yaml
 
 secretGenerator:
   - name: db-credentials
