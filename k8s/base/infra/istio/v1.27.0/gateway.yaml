@@ -1,11 +1,11 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: main-gateway
+  name: main-gateway-v127
   namespace: cluster-infra
 spec:
   selector:
-    istio: ingressgateway # use istio default controller
+    istio: ingressgateway-v127 # use istio default controller
   servers:
   - port:
       number: 80
