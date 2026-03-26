@@ -7,3 +7,10 @@ auth:
 external_services:
   prometheus:
     url: "http://prometheus.monitoring.svc.cluster.local:9090"
+  grafana:
+    enabled: true
+    url: "http://grafana.monitoring.svc.cluster.local:3000"
+    in_cluster_url: "http://grafana.monitoring.svc.cluster.local:3000"
+    auth:
+      type: "none"
+
