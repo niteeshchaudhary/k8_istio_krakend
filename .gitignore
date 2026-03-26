@@ -4,3 +4,4 @@ k8s/infra/cnpg/base/charts
 gateway-1.25.0.tgz
 gateway/
 k8s/infra/kiali/base/charts
+k8s/base/infra/istio/v1.27.0/charts
