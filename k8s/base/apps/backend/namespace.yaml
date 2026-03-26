@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: backend
   labels:
-    istio.io/rev: 1-27-0
+    istio.io/rev: 1-25-0
