@@ -25,13 +25,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-
-
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: istio-system
-  labels:
-    istio-injection: enabled
-    istio.io/rev: 1-25-0

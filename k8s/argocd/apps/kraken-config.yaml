@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: 'https://github.com/niteeshchaudhary/k8_istio_krakend.git'
     targetRevision: HEAD
-    path: k8s/environments/dev/apps/kraken-config
+    path: k8s/overlays/dev/apps/kraken-config
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: kraken-config
@@ -19,11 +19,3 @@ spec:
       prune: true
       selfHeal: true
 
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: kraken-config
-  labels:
-    istio-injection: enabled
-    istio.io/rev: 1-25-0

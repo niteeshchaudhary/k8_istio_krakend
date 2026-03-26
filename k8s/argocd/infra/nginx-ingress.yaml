@@ -31,5 +31,4 @@ kind: Namespace
 metadata:
   name: ingress-nginx
   labels:
-    istio-injection: enabled
     istio.io/rev: 1-25-0

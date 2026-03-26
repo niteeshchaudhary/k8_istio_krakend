@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: 'https://github.com/niteeshchaudhary/k8_istio_krakend.git'
     targetRevision: HEAD
-    path: k8s/environments/dev/infra/istio
+    path: k8s/overlays/dev/infra/istio
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: istio-system
