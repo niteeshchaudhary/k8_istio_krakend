@@ -5,6 +5,16 @@ auth:
 # If you have prometheus installed, point Kiali to it.
 # default is http://prometheus-server.prometheus-system.svc.cluster.local:80
 external_services:
+  istio:
+    root_namespace: "istio-system"
+    component_status:
+      components:
+      - app_label: "istiod"
+        is_core: true
+        namespace: "istio-system"
+      - app_label: "istiod"
+        is_core: true
+        namespace: "cluster-infra"
   prometheus:
     url: "http://prometheus.monitoring.svc.cluster.local:9090"
   grafana:
