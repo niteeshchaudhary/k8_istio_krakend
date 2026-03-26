@@ -30,5 +30,3 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: ingress-nginx
-  labels:
-    istio.io/rev: 1-25-0
