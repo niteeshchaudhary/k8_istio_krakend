@@ -11,6 +11,13 @@ spec:
   rules:
     - http:
         paths:
+          - path: /127/frontend(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 80
           - path: /127(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
