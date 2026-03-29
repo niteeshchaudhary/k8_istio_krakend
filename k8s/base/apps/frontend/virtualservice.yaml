@@ -6,7 +6,7 @@ spec:
   gateways:
     - cluster-infra/main-gateway
   hosts:
-    - frontend
+    - "*"
   http:
     - route:
       - destination:
