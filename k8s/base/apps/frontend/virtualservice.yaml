@@ -18,8 +18,11 @@ spec:
             host: frontend.frontend.svc.cluster.local
             port:
               number: 80
-    - route:
-      - destination:
-          host: frontend.frontend.svc.cluster.local
-          port:
-            number: 80
+    - match:
+        - uri:
+            prefix: /assets
+      route:
+        - destination:
+            host: frontend.frontend.svc.cluster.local
+            port:
+              number: 80
