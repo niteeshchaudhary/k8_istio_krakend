@@ -10,17 +10,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: /frontend
-      rewrite:
-        uri: /
-      route:
-        - destination:
-            host: frontend.frontend.svc.cluster.local
-            port:
-              number: 80
-    - match:
-        - uri:
-            prefix: /assets
+            prefix: /
       route:
         - destination:
             host: frontend.frontend.svc.cluster.local
