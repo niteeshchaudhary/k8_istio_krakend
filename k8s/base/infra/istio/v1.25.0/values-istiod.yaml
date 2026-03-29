@@ -3,6 +3,9 @@
 revision: "1-25-0"
 meshConfig:
   accessLogFile: /dev/stdout
+  discoverySelectors:
+    - matchLabels:
+        istio.io/rev: 1-25-0
 pilot:
   resources:
     requests:
