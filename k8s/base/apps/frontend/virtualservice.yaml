@@ -4,7 +4,7 @@ metadata:
   name: frontend
 spec:
   gateways:
-    - istio-system/main-gateway
+    - cluster-infra/main-gateway
   hosts:
     - frontend
   http:

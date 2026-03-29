@@ -15,6 +15,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: istio-ingressgateway-v127
+                name: istio-ingressgateway
                 port:
                   number: 80
