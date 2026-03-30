@@ -24,9 +24,12 @@ spec:
           mkdir -p /usr/share/nginx/html${VITE_ROUTE_PREFIX}
           cp -rn /usr/share/nginx/html/* /usr/share/nginx/html${VITE_ROUTE_PREFIX} || true
           sed -i "s|%%VITE_ROUTE_PREFIX%%|${VITE_ROUTE_PREFIX}|g" /usr/share/nginx/html${VITE_ROUTE_PREFIX}/index.html
+          sed -i "s|%%VITE_API_BASE_URL%%|${VITE_API_BASE_URL}|g" /usr/share/nginx/html${VITE_ROUTE_PREFIX}/index.html
+          sed -i "s|%%VITE_WS_URL%%|${VITE_WS_URL}|g" /usr/share/nginx/html${VITE_ROUTE_PREFIX}/index.html
           find /usr/share/nginx/html${VITE_ROUTE_PREFIX} -type f \( -name "*.html" -o -name "*.js" \) -exec sed -i "s|/assets/|${VITE_ROUTE_PREFIX}assets/|g" {} +
           sed -i "s|/index.html|${VITE_ROUTE_PREFIX}index.html|g" /etc/nginx/conf.d/default.conf
           nginx -g 'daemon off;'
+
 
         ports:
         - containerPort: 80 # Assuming port 80 for frontend
