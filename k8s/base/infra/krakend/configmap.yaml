@@ -13,13 +13,13 @@ data:
       "name": "My API Gateway",
       "endpoints": [
         {
-          "endpoint": "/api/auth/register",
+          "endpoint": "/127/api/auth/register",
           "method": "POST",
           "backend": [
             {
-              "url_pattern": "/api/auth/register",
+              "url_pattern": "/127/backend/api/auth/register",
               "host": [
-                "http://backend.backend"
+                "http://backend.backend:8093"
               ]
             }
           ]

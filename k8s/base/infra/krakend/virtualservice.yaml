@@ -9,7 +9,10 @@ spec:
   hosts:
     - "*"
   http:
-    - route:
+    - match:
+        - uri:
+            prefix: /127/api
+      route:
       - destination:
           host: krakend-svc
           port:

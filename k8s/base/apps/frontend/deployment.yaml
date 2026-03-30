@@ -23,6 +23,7 @@ spec:
         - |
           mkdir -p /usr/share/nginx/html${VITE_ROUTE_PREFIX}
           cp -rn /usr/share/nginx/html/* /usr/share/nginx/html${VITE_ROUTE_PREFIX} || true
+          sed -i "s|%%VITE_ROUTE_PREFIX%%|${VITE_ROUTE_PREFIX}|g" /usr/share/nginx/html${VITE_ROUTE_PREFIX}/index.html
           find /usr/share/nginx/html${VITE_ROUTE_PREFIX} -type f \( -name "*.html" -o -name "*.js" \) -exec sed -i "s|/assets/|${VITE_ROUTE_PREFIX}assets/|g" {} +
           nginx -g 'daemon off;'
         ports:
