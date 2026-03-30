@@ -11,7 +11,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: /127/api
+            prefix: /
       route:
       - destination:
           host: krakend-svc
