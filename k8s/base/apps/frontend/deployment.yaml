@@ -18,6 +18,12 @@ spec:
       containers:
       - name: frontend
         image: niteesh20/myapp-frontend:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          mkdir -p /usr/share/nginx/html${VITE_ROUTE_PREFIX}
+          cp -rn /usr/share/nginx/html/* /usr/share/nginx/html${VITE_ROUTE_PREFIX} || true
+          nginx -g 'daemon off;'
         ports:
         - containerPort: 80 # Assuming port 80 for frontend
         env:
