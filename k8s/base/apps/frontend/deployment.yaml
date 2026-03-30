@@ -23,6 +23,7 @@ spec:
         - |
           mkdir -p /usr/share/nginx/html${VITE_ROUTE_PREFIX}
           cp -rn /usr/share/nginx/html/* /usr/share/nginx/html${VITE_ROUTE_PREFIX} || true
+          find /usr/share/nginx/html${VITE_ROUTE_PREFIX} -type f \( -name "*.html" -o -name "*.js" \) -exec sed -i "s|/assets/|${VITE_ROUTE_PREFIX}assets/|g" {} +
           nginx -g 'daemon off;'
         ports:
         - containerPort: 80 # Assuming port 80 for frontend
