@@ -4,7 +4,6 @@ resources:
   - namespace.yaml
   - gateway.yaml
   - ingress.yaml
-  - assets-ingress.yaml
 
 helmCharts:
   - name: base
