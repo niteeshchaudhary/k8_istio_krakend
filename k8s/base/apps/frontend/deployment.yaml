@@ -20,6 +20,9 @@ spec:
         image: niteesh20/myapp-frontend:latest
         ports:
         - containerPort: 80 # Assuming port 80 for frontend
+        env:
+        - name: VITE_ROUTE_PREFIX
+          value: /127/frontend/
         resources:
           requests:
             cpu: 100m
@@ -27,3 +30,4 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
+

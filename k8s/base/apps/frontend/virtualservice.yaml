@@ -10,7 +10,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: /
+            prefix: /127/frontend
       route:
         - destination:
             host: frontend.frontend.svc.cluster.local

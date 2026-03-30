@@ -5,14 +5,14 @@ metadata:
   namespace: cluster-infra
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   rules:
     - http:
         paths:
-          - path: /127(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /127/
+            pathType: Prefix
             backend:
               service:
                 name: istio-ingressgateway
