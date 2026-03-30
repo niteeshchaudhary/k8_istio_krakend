@@ -21,6 +21,8 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "postgres"
+        - name: APP_AUTH_REQUIRED
+          value: "false"
         - name: SPRING_DATASOURCE_URL
           value: "jdbc:postgresql://pg-cluster-rw.postgres.svc:5432/appuser"
         - name: SPRING_DATASOURCE_USERNAME
