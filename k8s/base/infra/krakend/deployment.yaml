@@ -23,11 +23,14 @@ spec:
         - "/bin/sh"
         - "-c"
         - |
-          # The address of your config service
+          # Always copy jwks.json first (needed for JWT validation)
+          if [ -f /etc/krakend-default/jwks.json ]; then
+            cp /etc/krakend-default/jwks.json /etc/krakend/jwks.json
+          fi
+
           CONFIG_URL="http://kraken-config.kraken-config.svc.cluster.local:5000/api/krakend-config"
-          
           echo "Waiting for kraken-config to be ready..."
-          # Try to fetch up to 10 times with a 2-second delay
+          
           for i in $(seq 1 10); do
             echo "Attempt $i..."
             if curl -s -f "$CONFIG_URL" > /tmp/fetched.json; then
@@ -47,10 +50,6 @@ spec:
           else
             echo "Error: Default config not found at /etc/krakend-default/krakend.json"
             exit 1
-          fi
-
-          if [ -f /etc/krakend-default/jwks.json ]; then
-            cp /etc/krakend-default/jwks.json /etc/krakend/jwks.json
           fi
         volumeMounts:
         - name: krakend-config-default-vol
