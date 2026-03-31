@@ -47,9 +47,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -69,9 +68,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -91,9 +89,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -113,9 +110,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -135,9 +131,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -157,9 +152,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -179,9 +173,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -201,9 +194,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -223,9 +215,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -245,9 +236,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -267,9 +257,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -289,9 +278,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -311,9 +299,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -333,9 +320,8 @@ data:
           "extra_config": {
             "auth/validator": {
               "alg": "RS256",
-              "jwk_url": "http://backend.backend:8093/.well-known/jwks.json",
-              "cache": true,
-              "disable_jwk_security": true
+              "jwk_local_path": "/etc/krakend/jwks.json",
+              "cache": true
             }
           },
           "backend": [
@@ -361,6 +347,19 @@ data:
               ]
             }
           ]
+        }
+      ]
+    }
+  jwks.json: |
+    {
+      "keys": [
+        {
+          "kty": "RSA",
+          "alg": "RS256",
+          "kid": "debateapp-key-1",
+          "use": "sig",
+          "n": "nVXIU84Wu_XBaiR9CQ48opFIfpsM9iHASzyc8-n7Um5m8gn57aXiCjiYL7eILh29Cr2PGOr9wGtV76BbJqdidvULa9aiRbAbJ9niedj8kZN8ie4yoryPsYl-rTGKHvkIl1ZADEykgqlexasePXaz74_eQwoqjVUG37K2qg9IhG7Rrq9ogvuxXQN0MQLUQ85uVKgrSR0jnLquyy3U5PrtlfvNRucDGK5Li0fnmpp-uY-7jJ7TMTJw_I-X7uj6w_PyOv1XtYyzw9T7I-M2kZktbRM9FS3fIZYH_vCzT7j4NevHB-C5ab_XVwCEfMlWlCwQYL2asu2XqdEyi6dKbq5WoQ",
+          "e": "AQAB"
         }
       ]
     }

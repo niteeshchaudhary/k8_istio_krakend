@@ -48,6 +48,10 @@ spec:
             echo "Error: Default config not found at /etc/krakend-default/krakend.json"
             exit 1
           fi
+
+          if [ -f /etc/krakend-default/jwks.json ]; then
+            cp /etc/krakend-default/jwks.json /etc/krakend/jwks.json
+          fi
         volumeMounts:
         - name: krakend-config-default-vol
           mountPath: /etc/krakend-default
