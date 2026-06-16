@@ -6,5 +6,4 @@ resources:
   - service.yaml
   - configmap.yaml
   - virtualservice.yaml
-  - virtualservice127.yaml
 

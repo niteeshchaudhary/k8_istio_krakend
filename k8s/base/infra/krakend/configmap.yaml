@@ -333,20 +333,6 @@ data:
               ]
             }
           ]
-        },
-        {
-          "endpoint": "/frontend",
-          "method": "GET",
-          "output_encoding": "no-op",
-          "backend": [
-            {
-              "url_pattern": "/",
-              "encoding": "no-op",
-              "host": [
-                "http://frontend.frontend"
-              ]
-            }
-          ]
         }
       ]
     }

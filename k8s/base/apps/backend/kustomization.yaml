@@ -5,6 +5,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - virtualservice.yaml
+  - virtualservice127.yaml
 
 secretGenerator:
   - name: shared-db-secret
