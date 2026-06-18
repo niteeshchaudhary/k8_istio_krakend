@@ -58,6 +58,8 @@ spec:
           cfg = json.loads(path.read_text())
           jwk_patched = 0
           issuer_patched = 0
+          roles_removed = 0
+          nested_patched = 0
           sample = None
           for ep in cfg.get("endpoints", []):
               validator = (ep.get("extra_config") or {}).get("auth/validator")
@@ -72,16 +74,30 @@ spec:
               if isinstance(issuer, str) and ":8080/realms/" in issuer:
                   validator["issuer"] = issuer.replace(":8080/realms/", "/realms/")
                   issuer_patched += 1
-              if sample is None and ep.get("endpoint") == "/api/debates":
+              roles = validator.get("roles")
+              if roles:
+                  print(f"[DEBUG baf256] removing roles gate {roles} on {ep.get('method')} {ep.get('endpoint')}")
+                  del validator["roles"]
+                  roles_removed += 1
+              roles_key = validator.get("roles_key", "")
+              if isinstance(roles_key, str) and "." in roles_key:
+                  if validator.get("roles_key_is_nested") is not True:
+                      validator["roles_key_is_nested"] = True
+                      nested_patched += 1
+              if ep.get("endpoint") == "/api/debates" and ep.get("method") == "POST":
                   sample = {
-                      "method": ep.get("method"),
                       "issuer": validator.get("issuer"),
                       "disable_jwk_security": validator.get("disable_jwk_security"),
                       "audience": validator.get("audience"),
+                      "roles": validator.get("roles"),
+                      "roles_key": validator.get("roles_key"),
+                      "roles_key_is_nested": validator.get("roles_key_is_nested"),
                   }
           path.write_text(json.dumps(cfg, indent=4))
           print(f"[DEBUG baf256] Patched disable_jwk_security on {jwk_patched} endpoint(s)")
           print(f"[DEBUG baf256] Patched issuer on {issuer_patched} endpoint(s)")
+          print(f"[DEBUG baf256] Removed roles gate on {roles_removed} endpoint(s)")
+          print(f"[DEBUG baf256] Patched roles_key_is_nested on {nested_patched} endpoint(s)")
           if sample:
               print(f"[DEBUG baf256] POST /api/debates validator sample: {json.dumps(sample)}")
           PY
