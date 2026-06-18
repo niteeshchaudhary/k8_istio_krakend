@@ -4,7 +4,7 @@ metadata:
   name: kraken-config
 spec:
   gateways:
-    - istio-system/main-gateway
+    - mesh
   hosts:
     - mykraken-config # Internal host if accessed via Krakend or Istio Mesh
   http:
