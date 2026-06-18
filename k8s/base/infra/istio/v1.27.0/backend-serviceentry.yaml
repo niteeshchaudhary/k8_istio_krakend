@@ -1,15 +1,15 @@
-# Expose the 1.25-mesh backend to the 1.27 control plane so the
-# cluster-infra ingress gateway can route /127/api traffic to it.
+# Expose KrakenD (1.25 mesh) to the 1.27 control plane so the
+# cluster-infra ingress gateway can route /127/api through the API gateway.
 apiVersion: networking.istio.io/v1alpha3
 kind: ServiceEntry
 metadata:
-  name: backend-federation
+  name: krakend-federation
   namespace: cluster-infra
 spec:
   hosts:
-    - backend.backend.svc.cluster.local
+    - krakend-svc.krakend.svc.cluster.local
   ports:
-    - number: 8093
+    - number: 80
       name: http
       protocol: HTTP
   location: MESH_INTERNAL

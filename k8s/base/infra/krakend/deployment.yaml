@@ -23,11 +23,6 @@ spec:
         - "/bin/sh"
         - "-c"
         - |
-          # Always copy jwks.json first (needed for JWT validation)
-          if [ -f /etc/krakend-default/jwks.json ]; then
-            cp /etc/krakend-default/jwks.json /etc/krakend/jwks.json
-          fi
-
           CONFIG_URL="http://kraken-config.kraken-config.svc.cluster.local:5000/api/krakend-config"
           echo "Waiting for kraken-config to be ready..."
           

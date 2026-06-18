@@ -13,6 +13,6 @@ spec:
             prefix: /api
       route:
         - destination:
-            host: backend.backend.svc.cluster.local
+            host: krakend-svc.krakend.svc.cluster.local
             port:
-              number: 8093
+              number: 80

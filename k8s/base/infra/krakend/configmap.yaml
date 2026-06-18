@@ -13,12 +13,12 @@ data:
         "name": "DebateApp API Gateway",
         "endpoints": [
             {
-                "endpoint": "/api/auth/register",
+                "endpoint": "/api/auth/login",
                 "method": "POST",
                 "output_encoding": "no-op",
                 "backend": [
                     {
-                        "url_pattern": "/api/auth/register",
+                        "url_pattern": "/api/auth/login",
                         "encoding": "no-op",
                         "host": [
                             "http://backend.backend:8093"
@@ -27,12 +27,12 @@ data:
                 ]
             },
             {
-                "endpoint": "/api/auth/login",
+                "endpoint": "/api/auth/register",
                 "method": "POST",
                 "output_encoding": "no-op",
                 "backend": [
                     {
-                        "url_pattern": "/api/auth/login",
+                        "url_pattern": "/api/auth/register",
                         "encoding": "no-op",
                         "host": [
                             "http://backend.backend:8093"
@@ -56,10 +56,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/auth/logout",
@@ -77,23 +120,52 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
-            },
-            {
-                "endpoint": "/.well-known/jwks.json",
-                "method": "GET",
-                "output_encoding": "no-op",
-                "backend": [
-                    {
-                        "url_pattern": "/.well-known/jwks.json",
-                        "encoding": "no-op",
-                        "host": [
-                            "http://backend.backend:8093"
-                        ]
-                    }
+                },
+                "input_headers": [
+                    "Authorization"
                 ]
             },
             {
@@ -112,10 +184,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/debates/active",
@@ -203,10 +318,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/debates/{id}",
@@ -224,10 +382,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/debates/{id}/participants",
@@ -245,10 +446,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/debates/{id}/join",
@@ -294,10 +538,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/debates/{id}/end",
@@ -315,10 +602,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/debates/{id}/switch-speaker",
@@ -336,10 +666,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/votes/{debateId}",
@@ -357,10 +730,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/votes/{debateId}/my-vote",
@@ -378,10 +794,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/votes/{debateId}/all",
@@ -399,10 +858,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/votes/{debateId}/summary",
@@ -420,10 +922,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/votes/{debateId}/counts",
@@ -441,10 +986,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/reactions/{debateId}",
@@ -462,10 +1050,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/reactions/{debateId}",
@@ -483,10 +1114,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/reactions/{debateId}/participant/{targetParticipant}",
@@ -504,10 +1178,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/reactions/{debateId}/counts",
@@ -525,10 +1242,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/reactions/{debateId}/counts-by-participant",
@@ -546,10 +1306,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/reactions/{debateId}/recent",
@@ -567,10 +1370,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/reactions/{reactionId}",
@@ -588,10 +1434,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/{sessionId}/participants",
@@ -609,10 +1498,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/{sessionId}/join",
@@ -630,10 +1562,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/{sessionId}/leave",
@@ -651,10 +1626,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/{sessionId}/messages",
@@ -672,10 +1690,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/{sessionId}/messages/recent",
@@ -693,10 +1754,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/{sessionId}/messages",
@@ -714,10 +1818,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/messages/{messageId}",
@@ -735,10 +1882,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/{sessionId}/participant-count",
@@ -756,10 +1946,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/api/sessions/active",
@@ -777,10 +2010,53 @@ data:
                 "extra_config": {
                     "auth/validator": {
                         "alg": "RS256",
-                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "jwk_url": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp/protocol/openid-connect/certs",
+                        "issuer": "http://keycloak.keycloak.svc.cluster.local:8080/realms/debateapp",
+                        "audience": [
+                            "debateapp-api"
+                        ],
+                        "roles_key": "realm_access.roles",
+                        "propagate_claims": [
+                            [
+                                "sub",
+                                "X-User-Id"
+                            ],
+                            [
+                                "email",
+                                "X-User-Email"
+                            ],
+                            [
+                                "preferred_username",
+                                "X-User-Name"
+                            ]
+                        ],
                         "disable_jwk_security": true
+                    },
+                    "modifier/martian": {
+                        "fifo.Group": {
+                            "scope": [
+                                "request",
+                                "response"
+                            ],
+                            "aggregateErrors": false,
+                            "modifiers": [
+                                {
+                                    "header.Blacklist": {
+                                        "scope": [
+                                            "request"
+                                        ],
+                                        "names": [
+                                            "Authorization"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
-                }
+                },
+                "input_headers": [
+                    "Authorization"
+                ]
             },
             {
                 "endpoint": "/ws/info",
@@ -841,19 +2117,6 @@ data:
                         ]
                     }
                 ]
-            }
-        ]
-    }
-  jwks.json: |
-    {
-        "keys": [
-            {
-                "kty": "RSA",
-                "alg": "RS256",
-                "kid": "debateapp-key-1",
-                "use": "sig",
-                "n": "nVXIU84Wu_XBaiR9CQ48opFIfpsM9iHASzyc8-n7Um5m8gn57aXiCjiYL7eILh29Cr2PGOr9wGtV76BbJqdidvULa9aiRbAbJ9niedj8kZN8ie4yoryPsYl-rTGKHvkIl1ZADEykgqlexasePXaz74_eQwoqjVUG37K2qg9IhG7Rrq9ogvuxXQN0MQLUQ85uVKgrSR0jnLquyy3U5PrtlfvNRucDGK5Li0fnmpp-uY-7jJ7TMTJw_I-X7uj6w_PyOv1XtYyzw9T7I-M2kZktbRM9FS3fIZYH_vCzT7j4NevHB-C5ab_XVwCEfMlWlCwQYL2asu2XqdEyi6dKbq5WoQ",
-                "e": "AQAB"
             }
         ]
     }

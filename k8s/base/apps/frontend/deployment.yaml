@@ -41,8 +41,8 @@ spec:
         env:
         - name: VITE_ROUTE_PREFIX
           value: /
-        # /125/api → Istio 1.25 gateway → KrakenD (1.25 plane) → backend
-        # /127/api → Istio 1.27 gateway → backend directly (no KrakenD)
+        # /125/api → Istio 1.25 gateway → KrakenD → backend (OIDC validated at gateway)
+        # /127/api → Istio 1.27 gateway → KrakenD (same auth path, no direct backend bypass)
         - name: VITE_API_BASE_URL
           value: /125/api
         - name: VITE_WS_URL

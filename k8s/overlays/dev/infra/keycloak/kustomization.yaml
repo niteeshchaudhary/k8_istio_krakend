@@ -1,21 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml
-  - deployment.yaml
-  - service.yaml
-  - virtualservice.yaml
+  - ../../../../base/infra/keycloak
+  - ../../../../base/infra/keycloak/database.yaml
 
 secretGenerator:
   - name: shared-db-secret
+    namespace: keycloak
     options:
       disableNameSuffixHash: true
     literals:
       - username=appuser
       - password=apppassword
-  - name: keycloak-backend-secret
-    options:
-      disableNameSuffixHash: true
-    literals:
-      - client-secret=debateapp-backend-secret-change-me
-

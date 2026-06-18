@@ -23,6 +23,19 @@ spec:
           value: "postgres"
         - name: APP_AUTH_REQUIRED
           value: "false"
+        - name: APP_GATEWAY_AUTH
+          value: "true"
+        - name: KEYCLOAK_SERVER_URL
+          value: "http://keycloak.keycloak.svc.cluster.local:8080"
+        - name: KEYCLOAK_REALM
+          value: "debateapp"
+        - name: KEYCLOAK_BACKEND_CLIENT_ID
+          value: "debateapp-backend"
+        - name: KEYCLOAK_BACKEND_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-backend-secret
+              key: client-secret
         - name: SPRING_DATASOURCE_URL
           value: "jdbc:postgresql://pg-cluster-rw.postgres.svc:5432/appuser"
         - name: SPRING_DATASOURCE_USERNAME
