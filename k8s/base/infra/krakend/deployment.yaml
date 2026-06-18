@@ -60,6 +60,7 @@ spec:
           issuer_patched = 0
           roles_removed = 0
           nested_patched = 0
+          inhdr_patched = 0
           sample = None
           for ep in cfg.get("endpoints", []):
               validator = (ep.get("extra_config") or {}).get("auth/validator")
@@ -84,6 +85,20 @@ spec:
                   if validator.get("roles_key_is_nested") is not True:
                       validator["roles_key_is_nested"] = True
                       nested_patched += 1
+              # KrakenD drops propagate_claims headers unless they are in input_headers.
+              claims = validator.get("propagate_claims") or []
+              claim_headers = [p[1] for p in claims if isinstance(p, list) and len(p) > 1]
+              if claim_headers:
+                  inhdr = ep.get("input_headers", [])
+                  if inhdr != ["*"]:
+                      added = False
+                      for h in claim_headers:
+                          if h not in inhdr:
+                              inhdr = inhdr + [h]
+                              added = True
+                      if added:
+                          ep["input_headers"] = inhdr
+                          inhdr_patched += 1
               if ep.get("endpoint") == "/api/debates" and ep.get("method") == "POST":
                   sample = {
                       "issuer": validator.get("issuer"),
@@ -92,12 +107,15 @@ spec:
                       "roles": validator.get("roles"),
                       "roles_key": validator.get("roles_key"),
                       "roles_key_is_nested": validator.get("roles_key_is_nested"),
+                      "propagate_claims": validator.get("propagate_claims"),
+                      "input_headers": ep.get("input_headers"),
                   }
           path.write_text(json.dumps(cfg, indent=4))
           print(f"[DEBUG baf256] Patched disable_jwk_security on {jwk_patched} endpoint(s)")
           print(f"[DEBUG baf256] Patched issuer on {issuer_patched} endpoint(s)")
           print(f"[DEBUG baf256] Removed roles gate on {roles_removed} endpoint(s)")
           print(f"[DEBUG baf256] Patched roles_key_is_nested on {nested_patched} endpoint(s)")
+          print(f"[DEBUG baf256] Patched input_headers (claim headers) on {inhdr_patched} endpoint(s)")
           if sample:
               print(f"[DEBUG baf256] POST /api/debates validator sample: {json.dumps(sample)}")
           PY
