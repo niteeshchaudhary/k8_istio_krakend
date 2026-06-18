@@ -1,15 +1,15 @@
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: backend
-spec:
-  gateways:
-    - mesh
-  hosts:
-    - backend
-  http:
-    - route:
-      - destination:
-          host: backend.backend.svc.cluster.local
-          port:
-            number: 8093
+# apiVersion: networking.istio.io/v1alpha3
+# kind: VirtualService
+# metadata:
+#   name: backend
+# spec:
+#   gateways:
+#     - mesh
+#   hosts:
+#     - backend.backend
+#   http:
+#     - route:
+#       - destination:
+#           host: backend.backend
+#           port:
+#             number: 8093
