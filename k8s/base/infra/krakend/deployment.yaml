@@ -18,11 +18,12 @@ spec:
     spec:
       initContainers:
       - name: fetch-config
-        image: curlimages/curl:latest
+        image: python:3.12-alpine
         command:
         - "/bin/sh"
         - "-c"
         - |
+          apk add --no-cache curl >/dev/null
           CONFIG_URL="http://kraken-config.kraken-config.svc.cluster.local:5000/api/krakend-config"
           echo "Waiting for kraken-config to be ready..."
           
@@ -32,20 +33,58 @@ spec:
               if [ -s /tmp/fetched.json ]; then
                 echo "Successfully fetched dynamic config after $i attempts"
                 cp /tmp/fetched.json /etc/krakend/krakend.json
-                exit 0
+                break
               fi
             fi
             echo "Attempt $i failed, retrying in 3s..."
             sleep 3
           done
 
-          echo "Warning: kraken-config did not become ready in time. Using default."
-          if [ -f /etc/krakend-default/krakend.json ]; then
-            cp /etc/krakend-default/krakend.json /etc/krakend/krakend.json
-          else
-            echo "Error: Default config not found at /etc/krakend-default/krakend.json"
-            exit 1
+          if [ ! -s /etc/krakend/krakend.json ]; then
+            echo "Warning: kraken-config did not become ready in time. Using default."
+            if [ -f /etc/krakend-default/krakend.json ]; then
+              cp /etc/krakend-default/krakend.json /etc/krakend/krakend.json
+            else
+              echo "Error: Default config not found at /etc/krakend-default/krakend.json"
+              exit 1
+            fi
           fi
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("/etc/krakend/krakend.json")
+          cfg = json.loads(path.read_text())
+          jwk_patched = 0
+          issuer_patched = 0
+          sample = None
+          for ep in cfg.get("endpoints", []):
+              validator = (ep.get("extra_config") or {}).get("auth/validator")
+              if not validator:
+                  continue
+              jwk_url = validator.get("jwk_url", "")
+              if jwk_url.startswith("http://"):
+                  if validator.get("disable_jwk_security") is not True:
+                      validator["disable_jwk_security"] = True
+                      jwk_patched += 1
+              issuer = validator.get("issuer", "")
+              if isinstance(issuer, str) and ":8080/realms/" in issuer:
+                  validator["issuer"] = issuer.replace(":8080/realms/", "/realms/")
+                  issuer_patched += 1
+              if sample is None and ep.get("endpoint") == "/api/debates":
+                  sample = {
+                      "method": ep.get("method"),
+                      "issuer": validator.get("issuer"),
+                      "disable_jwk_security": validator.get("disable_jwk_security"),
+                      "audience": validator.get("audience"),
+                  }
+          path.write_text(json.dumps(cfg, indent=4))
+          print(f"[DEBUG baf256] Patched disable_jwk_security on {jwk_patched} endpoint(s)")
+          print(f"[DEBUG baf256] Patched issuer on {issuer_patched} endpoint(s)")
+          if sample:
+              print(f"[DEBUG baf256] POST /api/debates validator sample: {json.dumps(sample)}")
+          PY
         volumeMounts:
         - name: krakend-config-default-vol
           mountPath: /etc/krakend-default
