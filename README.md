@@ -109,6 +109,7 @@ Istio provides a dedicated infrastructure layer for service-to-service communica
 KrakenD acts as the front door for your APIs, designed for extreme performance.
 - **Middleware Integration**: Custom plugins for auth, logging, and metrics.
 - **Efficient Aggregation**: Reduce client-side round trips by merging multiple backend responses into one.
+- **SockJS / WebSocket routing**: See [k8s/base/infra/krakend/NOTES.md](k8s/base/infra/krakend/NOTES.md) for why `/ws/*` endpoints use GET + POST HTTP proxying instead of EE's native `websocket` namespace.
 
 ### 🔄 ArgoCD (GitOps)
 Continuous delivery for the entire stack.

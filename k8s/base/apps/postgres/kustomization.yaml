@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - cluster.yaml
   - namespace.yaml
+  - database-keycloak.yaml
 
 secretGenerator:
   - name: shared-db-secret
