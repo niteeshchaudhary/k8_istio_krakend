@@ -6,347 +6,875 @@ metadata:
 data:
   krakend.json: |
     {
-      "version": 3,
-      "port": 8080,
-      "timeout": "10000ms",
-      "cache_ttl": "300s",
-      "name": "My API Gateway",
-      "endpoints": [
-        {
-          "endpoint": "/api/auth/register",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "backend": [
+        "version": 3,
+        "port": 8080,
+        "timeout": "10000ms",
+        "cache_ttl": "300s",
+        "name": "DebateApp API Gateway",
+        "endpoints": [
             {
-              "url_pattern": "/api/auth/register",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/auth/login",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "backend": [
+                "endpoint": "/api/auth/register",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/auth/register",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/auth/login",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/debates/{id}",
-          "method": "GET",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/auth/login",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/auth/login",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/debates/{id}",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/debates",
-          "method": "GET",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/auth/me",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/auth/me",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
             {
-              "url_pattern": "/api/debates",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/debates",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/auth/logout",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/auth/logout",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
             {
-              "url_pattern": "/api/debates",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/debates/{id}/join",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/.well-known/jwks.json",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/.well-known/jwks.json",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/debates/{id}/join",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/debates/{id}/start",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
             {
-              "url_pattern": "/api/debates/{id}/start",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/debates/{id}/end",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates/active",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/active",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/debates/{id}/end",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/debates/{id}/messages",
-          "method": "GET",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates/scheduled",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/scheduled",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/debates/{id}/messages",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/votes/{debateId}",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates/public",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/public",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/votes/{debateId}",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/votes/{debateId}/summary",
-          "method": "GET",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates/search",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/search",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/votes/{debateId}/summary",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/reactions/{debateId}",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates/{id}",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/{id}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/reactions/{debateId}",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/reactions/{debateId}",
-          "method": "GET",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
             {
-              "url_pattern": "/api/reactions/{debateId}",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/sessions/{sessionId}/join",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates/{id}",
+                "method": "PUT",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/{id}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
             {
-              "url_pattern": "/api/sessions/{sessionId}/join",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/sessions/{sessionId}/messages",
-          "method": "GET",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates/{id}/participants",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/{id}/participants",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
             {
-              "url_pattern": "/api/sessions/{sessionId}/messages",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
-            }
-          ]
-        },
-        {
-          "endpoint": "/api/sessions/{sessionId}/messages",
-          "method": "POST",
-          "output_encoding": "no-op",
-          "extra_config": {
-            "auth/validator": {
-              "alg": "RS256",
-              "jwk_local_path": "/etc/krakend/jwks.json",
-              "disable_jwk_security": true
-            }
-          },
-          "backend": [
+                "endpoint": "/api/debates/{id}/join",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/{id}/join",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
             {
-              "url_pattern": "/api/sessions/{sessionId}/messages",
-              "encoding": "no-op",
-              "host": [
-                "http://backend.backend:8093"
-              ]
+                "endpoint": "/api/debates/{id}/messages",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/{id}/messages",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
+            {
+                "endpoint": "/api/debates/{id}/start",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/{id}/start",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/debates/{id}/end",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/{id}/end",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/debates/{id}/switch-speaker",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/debates/{id}/switch-speaker",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/votes/{debateId}",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/votes/{debateId}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/votes/{debateId}/my-vote",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/votes/{debateId}/my-vote",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/votes/{debateId}/all",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/votes/{debateId}/all",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/votes/{debateId}/summary",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/votes/{debateId}/summary",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/votes/{debateId}/counts",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/votes/{debateId}/counts",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/reactions/{debateId}",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/reactions/{debateId}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/reactions/{debateId}",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/reactions/{debateId}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/reactions/{debateId}/participant/{targetParticipant}",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/reactions/{debateId}/participant/{targetParticipant}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/reactions/{debateId}/counts",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/reactions/{debateId}/counts",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/reactions/{debateId}/counts-by-participant",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/reactions/{debateId}/counts-by-participant",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/reactions/{debateId}/recent",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/reactions/{debateId}/recent",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/reactions/{reactionId}",
+                "method": "DELETE",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/reactions/{reactionId}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/{sessionId}/participants",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/{sessionId}/participants",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/{sessionId}/join",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/{sessionId}/join",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/{sessionId}/leave",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/{sessionId}/leave",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/{sessionId}/messages",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/{sessionId}/messages",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/{sessionId}/messages/recent",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/{sessionId}/messages/recent",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/{sessionId}/messages",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/{sessionId}/messages",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/messages/{messageId}",
+                "method": "DELETE",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/messages/{messageId}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/{sessionId}/participant-count",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/{sessionId}/participant-count",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/sessions/active",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "backend": [
+                    {
+                        "url_pattern": "/api/sessions/active",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "auth/validator": {
+                        "alg": "RS256",
+                        "jwk_local_path": "/etc/krakend/jwks.json",
+                        "disable_jwk_security": true
+                    }
+                }
+            },
+            {
+                "endpoint": "/ws/*",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "input_headers": [
+                    "*"
+                ],
+                "input_query_strings": [
+                    "*"
+                ],
+                "backend": [
+                    {
+                        "url_pattern": "/ws/*",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
+            {
+                "endpoint": "/ws/*",
+                "method": "POST",
+                "output_encoding": "no-op",
+                "input_headers": [
+                    "*"
+                ],
+                "input_query_strings": [
+                    "*"
+                ],
+                "backend": [
+                    {
+                        "url_pattern": "/ws/*",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
+            {
+                "endpoint": "/ws/*",
+                "input_query_strings": [
+                    "*"
+                ],
+                "input_headers": [
+                    "Origin",
+                    "Cookie",
+                    "Authorization",
+                    "Sec-WebSocket-Protocol"
+                ],
+                "backend": [
+                    {
+                        "url_pattern": "/ws/*",
+                        "disable_host_sanitize": true,
+                        "host": [
+                            "ws://backend.backend:8093"
+                        ]
+                    }
+                ],
+                "extra_config": {
+                    "websocket": {
+                        "enable_direct_communication": true,
+                        "input_headers": [
+                            "Origin",
+                            "Cookie",
+                            "Authorization",
+                            "Sec-WebSocket-Protocol"
+                        ],
+                        "max_message_size": 3200000,
+                        "read_buffer_size": 8192,
+                        "write_buffer_size": 8192,
+                        "message_buffer_size": 4096,
+                        "write_wait": "10s",
+                        "pong_wait": "60s",
+                        "ping_period": "54s",
+                        "max_retries": 3,
+                        "backoff_strategy": "exponential-jitter"
+                    }
+                }
             }
-          ]
-        }
-      ]
+        ]
     }
   jwks.json: |
     {
-      "keys": [
-        {
-          "kty": "RSA",
-          "alg": "RS256",
-          "kid": "debateapp-key-1",
-          "use": "sig",
-          "n": "nVXIU84Wu_XBaiR9CQ48opFIfpsM9iHASzyc8-n7Um5m8gn57aXiCjiYL7eILh29Cr2PGOr9wGtV76BbJqdidvULa9aiRbAbJ9niedj8kZN8ie4yoryPsYl-rTGKHvkIl1ZADEykgqlexasePXaz74_eQwoqjVUG37K2qg9IhG7Rrq9ogvuxXQN0MQLUQ85uVKgrSR0jnLquyy3U5PrtlfvNRucDGK5Li0fnmpp-uY-7jJ7TMTJw_I-X7uj6w_PyOv1XtYyzw9T7I-M2kZktbRM9FS3fIZYH_vCzT7j4NevHB-C5ab_XVwCEfMlWlCwQYL2asu2XqdEyi6dKbq5WoQ",
-          "e": "AQAB"
-        }
-      ]
+        "keys": [
+            {
+                "kty": "RSA",
+                "alg": "RS256",
+                "kid": "debateapp-key-1",
+                "use": "sig",
+                "n": "nVXIU84Wu_XBaiR9CQ48opFIfpsM9iHASzyc8-n7Um5m8gn57aXiCjiYL7eILh29Cr2PGOr9wGtV76BbJqdidvULa9aiRbAbJ9niedj8kZN8ie4yoryPsYl-rTGKHvkIl1ZADEykgqlexasePXaz74_eQwoqjVUG37K2qg9IhG7Rrq9ogvuxXQN0MQLUQ85uVKgrSR0jnLquyy3U5PrtlfvNRucDGK5Li0fnmpp-uY-7jJ7TMTJw_I-X7uj6w_PyOv1XtYyzw9T7I-M2kZktbRM9FS3fIZYH_vCzT7j4NevHB-C5ab_XVwCEfMlWlCwQYL2asu2XqdEyi6dKbq5WoQ",
+                "e": "AQAB"
+            }
+        ]
     }
-
