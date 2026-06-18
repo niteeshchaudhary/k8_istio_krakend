@@ -88,17 +88,19 @@ spec:
               # KrakenD drops propagate_claims headers unless they are in input_headers.
               claims = validator.get("propagate_claims") or []
               claim_headers = [p[1] for p in claims if isinstance(p, list) and len(p) > 1]
-              if claim_headers:
-                  inhdr = ep.get("input_headers", [])
-                  if inhdr != ["*"]:
-                      added = False
-                      for h in claim_headers:
-                          if h not in inhdr:
-                              inhdr = inhdr + [h]
-                              added = True
-                      if added:
-                          ep["input_headers"] = inhdr
-                          inhdr_patched += 1
+              inhdr = ep.get("input_headers", [])
+              if inhdr != ["*"]:
+                  added = False
+                  for h in claim_headers:
+                      if h not in inhdr:
+                          inhdr = inhdr + [h]
+                          added = True
+                  if "Content-Type" not in inhdr:
+                      inhdr = inhdr + ["Content-Type"]
+                      added = True
+                  if added:
+                      ep["input_headers"] = inhdr
+                      inhdr_patched += 1
               if ep.get("endpoint") == "/api/debates" and ep.get("method") == "POST":
                   sample = {
                       "issuer": validator.get("issuer"),

@@ -102,6 +102,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -169,6 +170,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -236,6 +238,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -373,6 +376,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -440,6 +444,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -507,6 +512,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -602,6 +608,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -669,6 +676,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -736,6 +744,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -803,6 +812,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -870,6 +880,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -937,6 +948,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1004,6 +1016,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1071,6 +1084,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1138,6 +1152,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1205,6 +1220,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1272,6 +1288,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1339,6 +1356,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1406,6 +1424,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1473,6 +1492,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1540,6 +1560,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1607,6 +1628,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1674,6 +1696,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1741,6 +1764,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1808,6 +1832,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1875,6 +1900,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -1942,6 +1968,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -2009,6 +2036,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -2076,6 +2104,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
@@ -2143,6 +2172,7 @@ data:
                     }
                 },
                 "input_headers": [
+                    "Content-Type",
                     "X-User-Id",
                     "X-User-Email",
                     "X-User-Name"
