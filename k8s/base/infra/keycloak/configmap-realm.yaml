@@ -69,7 +69,10 @@ data:
             "realm-management": [
               "manage-users",
               "view-users",
-              "query-users"
+              "query-users",
+              "view-clients",
+              "query-clients",
+              "manage-clients"
             ]
           }
         }

@@ -18,4 +18,10 @@ secretGenerator:
       disableNameSuffixHash: true
     literals:
       - client-secret=debateapp-backend-secret-change-me
+  - name: keycloak-admin-secret
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - username=admin
+      - password=debateapp-keycloak-admin
 
