@@ -25,6 +25,8 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+            - containerPort: 9000
+              name: management
           env:
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
               valueFrom:
@@ -70,21 +72,29 @@ spec:
               value: xforwarded
             - name: KC_HEALTH_ENABLED
               value: "true"
+            - name: KC_HTTP_MANAGEMENT_SCHEME
+              value: "http"
           volumeMounts:
             - name: realm-import
               mountPath: /opt/keycloak/data/import
               readOnly: true
+          startupProbe:
+            httpGet:
+              path: /health/started
+              port: management
+            failureThreshold: 60
+            periodSeconds: 5
           readinessProbe:
             httpGet:
               path: /health/ready
-              port: 8080
-            initialDelaySeconds: 30
+              port: management
+            initialDelaySeconds: 10
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /health/live
-              port: 8080
-            initialDelaySeconds: 60
+              port: management
+            initialDelaySeconds: 30
             periodSeconds: 20
           resources:
             requests:
