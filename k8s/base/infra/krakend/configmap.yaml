@@ -783,7 +783,7 @@ data:
                 }
             },
             {
-                "endpoint": "/ws/*",
+                "endpoint": "/ws/info",
                 "method": "GET",
                 "output_encoding": "no-op",
                 "input_headers": [
@@ -794,7 +794,7 @@ data:
                 ],
                 "backend": [
                     {
-                        "url_pattern": "/ws/*",
+                        "url_pattern": "/ws/info",
                         "encoding": "no-op",
                         "host": [
                             "http://backend.backend:8093"
@@ -803,7 +803,27 @@ data:
                 ]
             },
             {
-                "endpoint": "/ws/*",
+                "endpoint": "/ws/{server}/{session}/{transport}",
+                "method": "GET",
+                "output_encoding": "no-op",
+                "input_headers": [
+                    "*"
+                ],
+                "input_query_strings": [
+                    "*"
+                ],
+                "backend": [
+                    {
+                        "url_pattern": "/ws/{server}/{session}/{transport}",
+                        "encoding": "no-op",
+                        "host": [
+                            "http://backend.backend:8093"
+                        ]
+                    }
+                ]
+            },
+            {
+                "endpoint": "/ws/{server}/{session}/{transport}",
                 "method": "POST",
                 "output_encoding": "no-op",
                 "input_headers": [
@@ -814,54 +834,13 @@ data:
                 ],
                 "backend": [
                     {
-                        "url_pattern": "/ws/*",
+                        "url_pattern": "/ws/{server}/{session}/{transport}",
                         "encoding": "no-op",
                         "host": [
                             "http://backend.backend:8093"
                         ]
                     }
                 ]
-            },
-            {
-                "endpoint": "/ws/*",
-                "input_query_strings": [
-                    "*"
-                ],
-                "input_headers": [
-                    "Origin",
-                    "Cookie",
-                    "Authorization",
-                    "Sec-WebSocket-Protocol"
-                ],
-                "backend": [
-                    {
-                        "url_pattern": "/ws/*",
-                        "disable_host_sanitize": true,
-                        "host": [
-                            "ws://backend.backend:8093"
-                        ]
-                    }
-                ],
-                "extra_config": {
-                    "websocket": {
-                        "enable_direct_communication": true,
-                        "input_headers": [
-                            "Origin",
-                            "Cookie",
-                            "Authorization",
-                            "Sec-WebSocket-Protocol"
-                        ],
-                        "max_message_size": 3200000,
-                        "read_buffer_size": 8192,
-                        "write_buffer_size": 8192,
-                        "message_buffer_size": 4096,
-                        "write_wait": "10s",
-                        "pong_wait": "60s",
-                        "ping_period": "54s",
-                        "max_retries": 3,
-                        "backoff_strategy": "exponential-jitter"
-                    }
-                }
             }
         ]
     }
