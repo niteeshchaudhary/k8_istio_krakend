@@ -128,7 +128,7 @@ spec:
           mountPath: /etc/krakend
       containers:
       - name: krakend
-        image: niteesh20/velonetics:2.2.0
+        image: niteesh20/pucura:2.2.0
         ports:
         - containerPort: 8080
         args: ["run", "-c", "/etc/krakend/krakend.json", "-d"]
