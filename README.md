@@ -67,7 +67,7 @@ flowchart TB
     NGX -->|"/127/* → strip prefix"| IGW127
 
     IGW125 --> GW125 --> VS125 --> KGD
-    IGW127 --> GW127 --> VS127 --> SE --> KGD
+    IGW127 --> GW127 --> VS127 --> SE -X-> KGD
 
     KC --> KCfg
     KGD -->|"/api/* public + protected"| BE
