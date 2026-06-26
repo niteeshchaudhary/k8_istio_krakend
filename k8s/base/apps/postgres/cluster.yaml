@@ -3,9 +3,16 @@ kind: Cluster
 metadata:
   name: pg-cluster
 spec:
-  instances: 2
+  instances: 1
   storage:
     size: 1Gi
+    resources:
+      requests:
+        cpu: 200m
+        memory: 200Mi
+      limits:
+        cpu: 500m
+        memory: 500Mi
   bootstrap:
     initdb:
       database: appuser
