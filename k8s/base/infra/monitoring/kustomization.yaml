@@ -4,3 +4,5 @@ resources:
   - namespace.yaml
   - prometheus
   - grafana
+  - ingress.yaml
+  - ingress-argo.yaml
