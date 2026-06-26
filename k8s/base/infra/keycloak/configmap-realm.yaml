@@ -8,6 +8,7 @@ data:
     {
       "realm": "debateapp",
       "enabled": true,
+      "accessTokenLifespan": 3600,
       "registrationAllowed": false,
       "loginWithEmailAllowed": true,
       "duplicateEmailsAllowed": false,
