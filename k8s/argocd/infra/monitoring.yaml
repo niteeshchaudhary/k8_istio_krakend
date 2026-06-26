@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/niteeshchaudhary/k8_istio_krakend.git'
-    targetRevision: full-working
+    targetRevision: minimal-work
     path: k8s/overlays/dev/infra/monitoring
   destination:
     server: 'https://kubernetes.default.svc'

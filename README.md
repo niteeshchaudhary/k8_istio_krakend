@@ -197,7 +197,7 @@ k8_istio_krakend/
 └── README.md
 ```
 
-ArgoCD Applications point at `k8s/overlays/dev/*` and track the `full-working` branch.
+ArgoCD Applications point at `k8s/overlays/dev/*` and track the `minimal-work` branch.
 
 ---
 
