@@ -24,7 +24,7 @@ spec:
               https: 30442
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: ingress-nginx
+    namespace: internal-ingress-nginx
   syncPolicy:
     automated:
       prune: true
@@ -34,4 +34,4 @@ spec:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ingress-nginx
+  name: internal-ingress-nginx
