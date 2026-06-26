@@ -52,14 +52,11 @@ flowchart TB
 
     User -->|"/"| NGX
     User -->|"/125/*"| NGX
-    User -->|"/127/*"| NGX
 
     NGX -->|"/"| FE
     NGX -->|"/125/* → strip prefix"| IGW125
-    NGX -->|"/127/* → strip prefix"| IGW127
 
     IGW125 --> GW125 --> VS125 --> KGD
-    IGW127 --> GW127 --> VS127 --> SE --x|Connection Failed| KGD
 
     KC --> KCfg
     KGD -->|"/api/* public + protected"| BE
@@ -70,7 +67,6 @@ flowchart TB
     KCfg --> CNPG
 
     Argo -.->|syncs| Istio125
-    Argo -.->|syncs| Istio127
     Argo -.->|syncs| Gateway
     Argo -.->|syncs| Apps
     Argo -.->|syncs| Data
@@ -282,8 +278,7 @@ kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 8080:80
 | :--- | :--- | :--- |
 | `root-bootstrap` | `k8s/argocd` | `argocd` |
 | `nginx-ingress` | Helm: ingress-nginx | `ingress-nginx` |
-| `istio-infra` | `k8s/overlays/dev/infra/istio` | `istio-system` |
-| `istio-infra-v127` | `k8s/overlays/dev/infra/istio-v127` | `cluster-infra` |
+| `istio-infra` | `k8s/overlays/dev/infra/istio` | `istio-system` ||
 | `istio-gateway` | Helm: gateway 1.25.0 | `istio-system` |
 | `krakend-gateway` | `k8s/overlays/dev/infra/krakend` | `krakend` |
 | `keycloak` | `k8s/overlays/dev/infra/keycloak` | `keycloak` |
