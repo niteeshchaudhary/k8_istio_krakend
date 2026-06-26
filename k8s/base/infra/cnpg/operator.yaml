@@ -19319,13 +19319,6 @@ metadata:
   namespace: cnpg-system
 spec:
   replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 200Mi
-    limits:
-      cpu: 200m
-      memory: 300Mi
   selector:
     matchLabels:
       app.kubernetes.io/instance: cnpg
@@ -19380,6 +19373,7 @@ spec:
             port: webhook-server
             scheme: HTTPS
           initialDelaySeconds: 3
+          resources:
         resources:
           limits:
             cpu: 200m

@@ -26,13 +26,6 @@ flowchart TB
         VS125[VirtualService: krakend]
     end
 
-    subgraph Istio127["cluster-infra — Istio 1.27.0"]
-        IGW127[Istio Ingress Gateway<br/>revision 1-27-0]
-        GW127[Gateway: main-gateway]
-        VS127[VirtualService: backend-127]
-        SE[ServiceEntry: krakend-federation]
-    end
-
     subgraph Gateway["krakend namespace — Istio 1.25 mesh"]
         KGD[KrakenD EE<br/>JWT validation · routing · rate limits]
         KC[Init: fetch config from kraken-config]
@@ -55,7 +48,6 @@ flowchart TB
     subgraph Observability["monitoring + istio-system"]
         Prom[Prometheus]
         Graf[Grafana]
-        Kiali[Kiali]
     end
 
     User -->|"/"| NGX
@@ -85,7 +77,6 @@ flowchart TB
 
     KGD -.-> Prom
     BE -.-> Prom
-    IGW125 -.-> Kiali
     Prom --> Graf
 ```
 
@@ -95,7 +86,7 @@ flowchart TB
 | :--- | :--- | :--- |
 | Edge | NGINX Ingress | Single cluster entry point; path-based routing to frontend and Istio gateways |
 | API gateway | KrakenD EE | Route aggregation, JWT validation (Keycloak), claim propagation, SockJS proxy |
-| Service mesh | Istio 1.25 / 1.27 | mTLS, traffic management, dual-revision upgrade pattern |
+| Service mesh | Istio 1.25 | mTLS, traffic management, dual-revision upgrade pattern |
 | Identity | Keycloak | OIDC provider; `debateapp` realm; issues tokens for `debateapp-api` audience |
 | Application | DebateApp | Spring Boot backend + React frontend |
 | Data | CloudNativePG | HA PostgreSQL for app and Keycloak databases |
@@ -123,16 +114,6 @@ Browser  →  NGINX (/125/*)  →  istio-system/istio-ingressgateway
 
 NGINX rewrites `/125/api/debates` to `/api/debates` before forwarding to the Istio gateway.
 
-### API traffic (canary mesh path — Istio 1.27)
-
-```
-Browser  →  NGINX (/127/*)  →  cluster-infra/istio-ingressgateway
-         →  Gateway main-gateway  →  VirtualService backend-127
-         →  ServiceEntry krakend-federation
-         →  krakend-svc.krakend.svc (1.25 mesh)  →  backend.backend:8093
-```
-
-The 1.27 revision does **not** bypass KrakenD. A `ServiceEntry` in `cluster-infra` federates KrakenD from the 1.25 mesh so both ingress paths share the same API gateway and auth rules.
 
 ### Authentication flow
 
@@ -157,19 +138,15 @@ This project runs **two Istio control planes** in the same cluster to demonstrat
 | Revision | Namespace | Manages namespaces labeled | Ingress prefix |
 | :--- | :--- | :--- | :--- |
 | **1.25.0** | `istio-system` | `istio.io/rev: 1-25-0` | `/125` |
-| **1.27.0** | `cluster-infra` | `istio.io/rev: 1-27-0` | `/127` |
 
 Each istiod uses `discoverySelectors` so it only watches namespaces with its own revision label, reducing control-plane overhead.
 
 **Namespaces on Istio 1.25.0:** `backend`, `krakend`, `kraken-config`, `keycloak`, `istio-system`
 
-**Namespaces on Istio 1.27.0:** `cluster-infra` (gateway + istiod only; app traffic federates back to KrakenD)
 
 To migrate a workload to a new revision, update the namespace label:
 
 ```bash
-# Move to Istio 1.27.0
-kubectl label namespace backend istio.io/rev=1-27-0 --overwrite
 
 # Roll back to Istio 1.25.0
 kubectl label namespace backend istio.io/rev=1-25-0 --overwrite
@@ -236,7 +213,6 @@ ArgoCD Applications point at `k8s/overlays/dev/*` and track the `minimal-work` b
 ### Observability
 
 - **Prometheus + Grafana** in `monitoring` namespace
-- **Kiali** in `istio-system` for service mesh topology and traffic health
 
 ---
 
@@ -289,7 +265,6 @@ ArgoCD Applications point at `k8s/overlays/dev/*` and track the `minimal-work` b
 | `/` | DebateApp frontend |
 | `/125/api/*` | API via Istio 1.25 → KrakenD → backend |
 | `/125/ws/*` | SockJS via Istio 1.25 → KrakenD → backend |
-| `/127/api/*` | API via Istio 1.27 → KrakenD (federated) → backend |
 
 Example port-forward for local testing:
 
@@ -310,12 +285,10 @@ kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 8080:80
 | `istio-infra` | `k8s/overlays/dev/infra/istio` | `istio-system` |
 | `istio-infra-v127` | `k8s/overlays/dev/infra/istio-v127` | `cluster-infra` |
 | `istio-gateway` | Helm: gateway 1.25.0 | `istio-system` |
-| `istio-gateway-v127` | Helm: gateway 1.27.0 | `cluster-infra` |
 | `krakend-gateway` | `k8s/overlays/dev/infra/krakend` | `krakend` |
 | `keycloak` | `k8s/overlays/dev/infra/keycloak` | `keycloak` |
 | `cnpg-infra` | `k8s/overlays/dev/infra/cnpg` | `cnpg-system` |
 | `monitoring` | `k8s/overlays/dev/infra/monitoring` | `monitoring` |
-| `kiali-infra` | `k8s/overlays/dev/infra/kiali` | `istio-system` |
 | `backend-app` | `k8s/overlays/dev/apps/backend` | `backend` |
 | `frontend-app` | `k8s/overlays/dev/apps/frontend` | `frontend` |
 | `postgres-app` | `k8s/overlays/dev/apps/postgres` | `postgres` |
@@ -325,7 +298,6 @@ kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 8080:80
 
 ## Monitoring and Maintenance
 
-- **Kiali** — service graph, mTLS status, request error rates (Istio 1.25 mesh)
 - **Grafana** — cluster, KrakenD, and Istio metrics dashboards
 - **CloudNativePG** — use the [`kubectl-cnpg`](https://cloudnative-pg.io/documentation/current/kubectl-plugin/) plugin for backups, failover, and cluster status
 
