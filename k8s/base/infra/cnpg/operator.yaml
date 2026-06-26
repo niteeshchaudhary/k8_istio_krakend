@@ -19373,7 +19373,6 @@ spec:
             port: webhook-server
             scheme: HTTPS
           initialDelaySeconds: 3
-          resources:
         resources:
           limits:
             cpu: 200m
