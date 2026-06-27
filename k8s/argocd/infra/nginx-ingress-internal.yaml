@@ -14,7 +14,14 @@ spec:
     helm:
       values: |
         controller:
-          watchIngressWithoutClass: true
+          watchIngressWithoutClass: false
+          ingressClass: internal
+
+          ingressClassResource:
+            name: internal
+            enabled: true
+            default: false
+            controllerValue: k8s.io/internal-ingress-nginx
           publishService:
             enabled: true
           service:
