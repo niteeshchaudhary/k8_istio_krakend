@@ -16,6 +16,8 @@ spec:
         controller:
           watchIngressWithoutClass: false
           ingressClass: internal
+          
+          controllerClass: k8s.io/internal-ingress-nginx
 
           ingressClassResource:
             name: internal

@@ -3,15 +3,13 @@ kind: Ingress
 metadata:
   name: internal-ingressgateway-argo
   namespace: argocd
-  annotations:
-    kubernetes.io/ingress.class: internal
 spec:
   ingressClassName: internal
   rules:
     - http:
         paths:
           - path: /
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: argocd-server
