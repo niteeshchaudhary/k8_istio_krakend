@@ -16,6 +16,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: grafana.monitoring
+                name: grafana
                 port:
                   number: 80
