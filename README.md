@@ -306,7 +306,7 @@ ArgoCD Applications point at `k8s/overlays/dev/*` and track the `full-working` b
 | `/` | DebateApp frontend |
 | `/125/api/*` | API via Istio 1.25 → KrakenD → backend |
 | `/125/ws/*` | SockJS via Istio 1.25 → KrakenD → backend |
-| `/127/api/*` | API via Istio 1.27 → KrakenD (federated) → backend |
+| `/127/api/*` | API via Istio 1.27 → KrakenD (federated)-X→ backend |
 
 Example port-forward for local testing:
 
