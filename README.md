@@ -8,85 +8,102 @@ Traffic enters through **NGINX Ingress**, which fans out to the SPA, two Istio i
 
 ```mermaid
 flowchart TB
-    subgraph External
-        User([Browser / Client])
-    end
 
-    subgraph Ingress["ingress-nginx"]
-        NGX[NGINX Ingress Controller]
-    end
+subgraph External
+    User([Browser / Client])
+end
 
-    subgraph Frontend["frontend namespace"]
-        FE[DebateApp Frontend<br/>React + nginx]
-    end
+subgraph Ingress["ingress-nginx"]
+    NGX["NGINX Ingress Controller"]
+end
 
-    subgraph Istio125["istio-system — Istio 1.25.0"]
-        IGW125[Istio Ingress Gateway<br/>revision 1-25-0]
-        GW125[Gateway: main-gateway]
-        VS125[VirtualService: krakend]
-    end
+subgraph Frontend["frontend namespace"]
+    FE["DebateApp Frontend
+React + nginx"]
+end
 
-    subgraph Istio127["cluster-infra — Istio 1.27.0"]
-        IGW127[Istio Ingress Gateway<br/>revision 1-27-0]
-        GW127[Gateway: main-gateway]
-        VS127[VirtualService: backend-127]
-        SE[ServiceEntry: krakend-federation]
-    end
+subgraph Istio125["istio-system - Istio 1.25"]
+    IGW125["Istio Ingress Gateway
+revision 1-25-0"]
+    GW125["Gateway
+main-gateway"]
+    VS125["VirtualService
+krakend"]
+end
 
-    subgraph Gateway["krakend namespace — Istio 1.25 mesh"]
-        KGD[KrakenD EE<br/>JWT validation · routing · rate limits]
-        KC[Init: fetch config from kraken-config]
-    end
+subgraph Istio127["cluster-infra - Istio 1.27"]
+    IGW127["Istio Ingress Gateway
+revision 1-27-0"]
+    GW127["Gateway
+main-gateway"]
+    VS127["VirtualService
+backend-127"]
+    SE["ServiceEntry
+krakend-federation"]
+end
 
-    subgraph Apps["Application namespaces — Istio 1.25 mesh"]
-        BE[Spring Boot Backend<br/>DebateApp API + SockJS /ws]
-        KCfg[kraken-config<br/>dynamic KrakenD config API]
-        KCloak[Keycloak<br/>OIDC / JWT issuer]
-    end
+subgraph Gateway["krakend namespace"]
+    KGD["KrakenD EE
+JWT validation
+Routing
+Rate limits"]
+    KC["Init
+Fetch config"]
+end
 
-    subgraph Data["postgres namespace"]
-        CNPG[(CloudNativePG<br/>pg-cluster · 2 instances)]
-    end
+subgraph Apps["Application namespaces"]
+    BE["Spring Boot Backend
+API + SockJS"]
+    KCfg["kraken-config"]
+    KCloak["Keycloak"]
+end
 
-    subgraph GitOps["argocd namespace"]
-        Argo[ArgoCD<br/>App-of-Apps bootstrap]
-    end
+subgraph Data["postgres"]
+    CNPG["CloudNativePG
+2 instances"]
+end
 
-    subgraph Observability["monitoring + istio-system"]
-        Prom[Prometheus]
-        Graf[Grafana]
-        Kiali[Kiali]
-    end
+subgraph GitOps["argocd"]
+    Argo["ArgoCD"]
+end
 
-    User -->|"/"| NGX
-    User -->|"/125/*"| NGX
-    User -->|"/127/*"| NGX
+subgraph Observability["monitoring"]
+    Prom["Prometheus"]
+    Graf["Grafana"]
+    Kiali["Kiali"]
+end
 
-    NGX -->|"/"| FE
-    NGX -->|"/125/* → strip prefix"| IGW125
-    NGX -->|"/127/* → strip prefix"| IGW127
+User --> NGX
 
-    IGW125 --> GW125 --> VS125 --> KGD
-    IGW127 --> GW127 --> VS127 --> SE --x|Connection Failed| KGD
+NGX --> FE
+NGX --> IGW125
+NGX --> IGW127
 
-    KC --> KCfg
-    KGD -->|"/api/* public + protected"| BE
-    KGD -->|JWK fetch| KCloak
-    BE --> KCloak
-    BE --> CNPG
-    KCloak --> CNPG
-    KCfg --> CNPG
+IGW125 --> GW125 --> VS125 --> KGD
+IGW127 --> GW127 --> VS127 --> SE
+SE -.->|Connection Failed| KGD
 
-    Argo -.->|syncs| Istio125
-    Argo -.->|syncs| Istio127
-    Argo -.->|syncs| Gateway
-    Argo -.->|syncs| Apps
-    Argo -.->|syncs| Data
+KC --> KCfg
 
-    KGD -.-> Prom
-    BE -.-> Prom
-    IGW125 -.-> Kiali
-    Prom --> Graf
+KGD --> BE
+KGD --> KCloak
+
+BE --> KCloak
+BE --> CNPG
+
+KCloak --> CNPG
+KCfg --> CNPG
+
+Argo -.-> Istio125
+Argo -.-> Istio127
+Argo -.-> Gateway
+Argo -.-> Apps
+Argo -.-> Data
+
+KGD -.-> Prom
+BE -.-> Prom
+IGW125 -.-> Kiali
+Prom --> Graf
 ```
 
 ### Layered responsibilities
