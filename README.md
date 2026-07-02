@@ -1,6 +1,6 @@
 # Kubernetes Service Mesh with Istio and KrakenD API Gateway
 
-A production-style Kubernetes platform that runs **DebateApp** (React frontend + Spring Boot backend) behind **KrakenD EE**, **Istio**, **Keycloak**, and **ArgoCD GitOps**. The stack demonstrates zero-trust mesh networking, JWT validation at the API gateway, dual Istio control-plane revisions, and full declarative deployment.
+A production-style Kubernetes platform that runs **DebateApp** (React frontend + Spring Boot backend) behind **KrakenD EE(used pucora gateway free altenative)**, **Istio**, **Keycloak**, and **ArgoCD GitOps**. The stack demonstrates zero-trust mesh networking, JWT validation at the API gateway, dual Istio control-plane revisions, and full declarative deployment.
 
 ## Architecture Overview
 
