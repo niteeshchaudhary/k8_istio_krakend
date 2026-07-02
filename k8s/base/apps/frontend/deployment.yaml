@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: frontend
-        sidecar.istio.io/inject: "true"
+        sidecar.istio.io/inject: "false"
     spec:
       containers:
       - name: frontend
@@ -21,27 +21,32 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
         - |
-          mkdir -p /usr/share/nginx/html${VITE_ROUTE_PREFIX}
-          cp -rn /usr/share/nginx/html/* /usr/share/nginx/html${VITE_ROUTE_PREFIX} || true
-          sed -i "s|%%VITE_ROUTE_PREFIX%%|${VITE_ROUTE_PREFIX}|g" /usr/share/nginx/html${VITE_ROUTE_PREFIX}/index.html
-          sed -i "s|%%VITE_API_BASE_URL%%|${VITE_API_BASE_URL}|g" /usr/share/nginx/html${VITE_ROUTE_PREFIX}/index.html
-          sed -i "s|%%VITE_WS_URL%%|${VITE_WS_URL}|g" /usr/share/nginx/html${VITE_ROUTE_PREFIX}/index.html
-          find /usr/share/nginx/html${VITE_ROUTE_PREFIX} -type f \( -name "*.html" -o -name "*.js" \) -exec sed -i "s|/assets/|${VITE_ROUTE_PREFIX}assets/|g" {} +
-          sed -i "s|%%VITE_INDEX_FALLBACK%%|${VITE_ROUTE_PREFIX}index.html|g" /etc/nginx/conf.d/default.conf
+          if [ "${VITE_ROUTE_PREFIX}" != "/" ]; then
+            mkdir -p /usr/share/nginx/html${VITE_ROUTE_PREFIX}
+            cp -rn /usr/share/nginx/html/* /usr/share/nginx/html${VITE_ROUTE_PREFIX} || true
+            find /usr/share/nginx/html${VITE_ROUTE_PREFIX} -type f \( -name "*.html" -o -name "*.js" \) -exec sed -i "s|/assets/|${VITE_ROUTE_PREFIX}assets/|g" {} +
+            HTML_DIR="/usr/share/nginx/html${VITE_ROUTE_PREFIX}"
+            INDEX_FALLBACK="${VITE_ROUTE_PREFIX}index.html"
+          else
+            HTML_DIR="/usr/share/nginx/html"
+            INDEX_FALLBACK="/index.html"
+          fi
+          sed -i "s|%%VITE_ROUTE_PREFIX%%|${VITE_ROUTE_PREFIX}|g" ${HTML_DIR}/index.html
+          sed -i "s|%%VITE_API_BASE_URL%%|${VITE_API_BASE_URL}|g" ${HTML_DIR}/index.html
+          sed -i "s|%%VITE_WS_URL%%|${VITE_WS_URL}|g" ${HTML_DIR}/index.html
+          sed -i "s|%%VITE_INDEX_FALLBACK%%|${INDEX_FALLBACK}|g" /etc/nginx/conf.d/default.conf
           nginx -g 'daemon off;'
-
-
-
-
         ports:
-        - containerPort: 80 # Assuming port 80 for frontend
+        - containerPort: 80
         env:
         - name: VITE_ROUTE_PREFIX
-          value: /127/frontend/
+          value: /
+        # /125/api → Istio 1.25 gateway → KrakenD → backend (OIDC validated at gateway)
+        # /127/api → Istio 1.27 gateway → KrakenD (same auth path, no direct backend bypass)
         - name: VITE_API_BASE_URL
-          value: http://localhost/125/api
+          value: /125/api
         - name: VITE_WS_URL
-          value: http://localhost/125/ws
+          value: /125/ws
         resources:
           requests:
             cpu: 100m
@@ -49,4 +54,3 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
-

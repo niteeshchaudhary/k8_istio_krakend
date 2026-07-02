@@ -1,8 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: krakend-127
-  namespace: krakend
+  name: backend-127
 spec:
   gateways:
     - cluster-infra/main-gateway
@@ -11,9 +10,9 @@ spec:
   http:
     - match:
         - uri:
-            prefix: /127/api
+            prefix: /api
       route:
-      - destination:
-          host: krakend-svc
-          port:
-            number: 80
+        - destination:
+            host: krakend-svc.krakend.svc.cluster.local
+            port:
+              number: 80

@@ -4,6 +4,8 @@ resources:
   - namespace.yaml
   - gateway.yaml
   - ingress.yaml
+  - virtualservice127.yaml
+  - backend-serviceentry.yaml
 
 helmCharts:
   - name: base
