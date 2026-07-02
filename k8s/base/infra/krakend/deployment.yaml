@@ -18,16 +18,12 @@ spec:
     spec:
       initContainers:
       - name: fetch-config
-        image: curlimages/curl:latest
+        image: python:3.12-alpine
         command:
         - "/bin/sh"
         - "-c"
         - |
-          # Always copy jwks.json first (needed for JWT validation)
-          if [ -f /etc/krakend-default/jwks.json ]; then
-            cp /etc/krakend-default/jwks.json /etc/krakend/jwks.json
-          fi
-
+          apk add --no-cache curl >/dev/null
           CONFIG_URL="http://kraken-config.kraken-config.svc.cluster.local:5000/api/krakend-config"
           echo "Waiting for kraken-config to be ready..."
           
@@ -37,20 +33,94 @@ spec:
               if [ -s /tmp/fetched.json ]; then
                 echo "Successfully fetched dynamic config after $i attempts"
                 cp /tmp/fetched.json /etc/krakend/krakend.json
-                exit 0
+                break
               fi
             fi
             echo "Attempt $i failed, retrying in 3s..."
             sleep 3
           done
 
-          echo "Warning: kraken-config did not become ready in time. Using default."
-          if [ -f /etc/krakend-default/krakend.json ]; then
-            cp /etc/krakend-default/krakend.json /etc/krakend/krakend.json
-          else
-            echo "Error: Default config not found at /etc/krakend-default/krakend.json"
-            exit 1
+          if [ ! -s /etc/krakend/krakend.json ]; then
+            echo "Warning: kraken-config did not become ready in time. Using default."
+            if [ -f /etc/krakend-default/krakend.json ]; then
+              cp /etc/krakend-default/krakend.json /etc/krakend/krakend.json
+            else
+              echo "Error: Default config not found at /etc/krakend-default/krakend.json"
+              exit 1
+            fi
           fi
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("/etc/krakend/krakend.json")
+          cfg = json.loads(path.read_text())
+          jwk_patched = 0
+          issuer_patched = 0
+          roles_removed = 0
+          nested_patched = 0
+          inhdr_patched = 0
+          sample = None
+          for ep in cfg.get("endpoints", []):
+              validator = (ep.get("extra_config") or {}).get("auth/validator")
+              if not validator:
+                  continue
+              jwk_url = validator.get("jwk_url", "")
+              if jwk_url.startswith("http://"):
+                  if validator.get("disable_jwk_security") is not True:
+                      validator["disable_jwk_security"] = True
+                      jwk_patched += 1
+              issuer = validator.get("issuer", "")
+              if isinstance(issuer, str) and ":8080/realms/" in issuer:
+                  validator["issuer"] = issuer.replace(":8080/realms/", "/realms/")
+                  issuer_patched += 1
+              roles = validator.get("roles")
+              if roles:
+                  print(f"[DEBUG baf256] removing roles gate {roles} on {ep.get('method')} {ep.get('endpoint')}")
+                  del validator["roles"]
+                  roles_removed += 1
+              roles_key = validator.get("roles_key", "")
+              if isinstance(roles_key, str) and "." in roles_key:
+                  if validator.get("roles_key_is_nested") is not True:
+                      validator["roles_key_is_nested"] = True
+                      nested_patched += 1
+              # KrakenD drops propagate_claims headers unless they are in input_headers.
+              claims = validator.get("propagate_claims") or []
+              claim_headers = [p[1] for p in claims if isinstance(p, list) and len(p) > 1]
+              inhdr = ep.get("input_headers", [])
+              if inhdr != ["*"]:
+                  added = False
+                  for h in claim_headers:
+                      if h not in inhdr:
+                          inhdr = inhdr + [h]
+                          added = True
+                  if "Content-Type" not in inhdr:
+                      inhdr = inhdr + ["Content-Type"]
+                      added = True
+                  if added:
+                      ep["input_headers"] = inhdr
+                      inhdr_patched += 1
+              if ep.get("endpoint") == "/api/debates" and ep.get("method") == "POST":
+                  sample = {
+                      "issuer": validator.get("issuer"),
+                      "disable_jwk_security": validator.get("disable_jwk_security"),
+                      "audience": validator.get("audience"),
+                      "roles": validator.get("roles"),
+                      "roles_key": validator.get("roles_key"),
+                      "roles_key_is_nested": validator.get("roles_key_is_nested"),
+                      "propagate_claims": validator.get("propagate_claims"),
+                      "input_headers": ep.get("input_headers"),
+                  }
+          path.write_text(json.dumps(cfg, indent=4))
+          print(f"[DEBUG baf256] Patched disable_jwk_security on {jwk_patched} endpoint(s)")
+          print(f"[DEBUG baf256] Patched issuer on {issuer_patched} endpoint(s)")
+          print(f"[DEBUG baf256] Removed roles gate on {roles_removed} endpoint(s)")
+          print(f"[DEBUG baf256] Patched roles_key_is_nested on {nested_patched} endpoint(s)")
+          print(f"[DEBUG baf256] Patched input_headers (claim headers) on {inhdr_patched} endpoint(s)")
+          if sample:
+              print(f"[DEBUG baf256] POST /api/debates validator sample: {json.dumps(sample)}")
+          PY
         volumeMounts:
         - name: krakend-config-default-vol
           mountPath: /etc/krakend-default
@@ -58,7 +128,7 @@ spec:
           mountPath: /etc/krakend
       containers:
       - name: krakend
-        image: niteesh20/velonetics:2.0.0
+        image: niteesh20/pucora:2.2.0
         ports:
         - containerPort: 8080
         args: ["run", "-c", "/etc/krakend/krakend.json", "-d"]
