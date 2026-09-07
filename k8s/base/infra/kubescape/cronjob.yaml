@@ -56,8 +56,23 @@ spec:
                 - -c
                 - |
                   set -eu
-                  curl -sf --data-binary @/results/metrics.prom.txt \
-                    "http://kubescape-pushgateway.kubescape.svc.cluster.local:9091/metrics/job/kubescape/instance/cluster"
+                  GATEWAY_URL="http://kubescape-pushgateway.kubescape.svc.cluster.local:9091/metrics/job/kubescape/instance/cluster"
+
+                  # Pushgateway rejects any sample that carries an explicit timestamp
+                  # (it assigns its own at scrape time); kubescape's prometheus
+                  # formatter writes one per line, so strip the 3rd field on data
+                  # lines before pushing. Comment/blank lines are left untouched.
+                  awk '/^#/ || NF < 3 { print; next } { print $1, $2 }' \
+                    /results/metrics.prom.txt > /results/metrics.pushgateway.prom
+
+                  HTTP_STATUS=$(curl -s -o /tmp/response.txt -w '%{http_code}' \
+                    --data-binary @/results/metrics.pushgateway.prom "$GATEWAY_URL")
+                  if [ "$HTTP_STATUS" -ge 300 ]; then
+                    echo "Pushgateway rejected metrics (HTTP $HTTP_STATUS):"
+                    cat /tmp/response.txt
+                    exit 1
+                  fi
+                  echo "Pushed metrics to $GATEWAY_URL (HTTP $HTTP_STATUS)"
               securityContext:
                 allowPrivilegeEscalation: false
                 capabilities:
