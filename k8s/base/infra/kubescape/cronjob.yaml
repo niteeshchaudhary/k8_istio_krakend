@@ -58,12 +58,20 @@ spec:
                   set -eu
                   GATEWAY_URL="http://kubescape-pushgateway.kubescape.svc.cluster.local:9091/metrics/job/kubescape/instance/cluster"
 
-                  # Pushgateway rejects any sample that carries an explicit timestamp
-                  # (it assigns its own at scrape time); kubescape's prometheus
-                  # formatter writes one per line, so strip the 3rd field on data
-                  # lines before pushing. Comment/blank lines are left untouched.
-                  awk '/^#/ || NF < 3 { print; next } { print $1, $2 }' \
-                    /results/metrics.prom.txt > /results/metrics.pushgateway.prom
+                  # kubescape's prometheus formatter sometimes embeds a literal newline
+                  # inside a label value (e.g. a multi-line control description) instead
+                  # of escaping it as \n, which splits one logical sample across two
+                  # physical lines and breaks Pushgateway's line-based parser. Rejoin any
+                  # line left with an unterminated quoted string, escaping the embedded
+                  # newline properly, before pushing.
+                  awk '
+                    { line = pending ? acc "\\n" $0 : $0
+                      q = gsub(/"/, "&", line)
+                      if (q % 2 == 0) { print line; pending = 0; acc = "" }
+                      else { acc = line; pending = 1 }
+                    }
+                    END { if (pending) print acc }
+                  ' /results/metrics.prom.txt > /results/metrics.pushgateway.prom
 
                   HTTP_STATUS=$(curl -s -o /tmp/response.txt -w '%{http_code}' \
                     --data-binary @/results/metrics.pushgateway.prom "$GATEWAY_URL")
