@@ -10,6 +10,7 @@ resources:
   - infra/keycloak.yaml
   - infra/kiali-infra.yaml
   - infra/cnpg.yaml
+  - - infra/kube-bench.yaml
   - infra/monitoring.yaml
   - apps/backend.yaml
   - apps/frontend.yaml
