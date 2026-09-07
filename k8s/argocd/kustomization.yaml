@@ -11,6 +11,8 @@ resources:
   - infra/kiali-infra.yaml
   - infra/cnpg.yaml
   - infra/kube-bench.yaml
+  - infra/kubescape.yaml
+  - infra/kubescape.yaml
   - infra/monitoring.yaml
   - apps/backend.yaml
   - apps/frontend.yaml

@@ -1,0 +1,94 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kubescape
+  namespace: kubescape
+spec:
+  # Weekly, offset from the kube-bench run (daily 03:00) so the two scans don't
+  # compete for API server attention. Adjust per environment if needed.
+  schedule: "0 4 * * 1"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 12
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 1200
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: kubescape
+            sidecar.istio.io/inject: "false"
+        spec:
+          serviceAccountName: kubescape
+          restartPolicy: Never
+          initContainers:
+            - name: kubescape-metrics
+              image: quay.io/kubescape/kubescape-cli:v4.0.13
+              command:
+                - kubescape
+                - scan
+                - --keep-local
+                - --host-scan=false
+                - --format
+                - prometheus
+                - --output
+                - /results/metrics.prom
+              env:
+                - name: HOME
+                  value: /home/kubescape
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: results
+                  mountPath: /results
+                - name: home
+                  mountPath: /home/kubescape
+            - name: push-metrics
+              image: docker.io/curlimages/curl:8.10.1
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  curl -sf --data-binary @/results/metrics.prom \
+                    "http://kubescape-pushgateway.kubescape.svc.cluster.local:9091/metrics/job/kubescape/instance/cluster"
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: results
+                  mountPath: /results
+          containers:
+            # Human-readable report: this is what `kubectl logs job/<name> -n kubescape` shows.
+            - name: kubescape-report
+              image: quay.io/kubescape/kubescape-cli:v4.0.13
+              command:
+                - kubescape
+                - scan
+                - --keep-local
+                - --host-scan=false
+              env:
+                - name: HOME
+                  value: /home/kubescape
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  memory: 1Gi
+              volumeMounts:
+                - name: home
+                  mountPath: /home/kubescape
+          volumes:
+            - name: results
+              emptyDir: {}
+            - name: home
+              emptyDir: {}

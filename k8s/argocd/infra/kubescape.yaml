@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubescape
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/niteeshchaudhary/k8_istio_krakend.git'
+    targetRevision: full-working
+    path: k8s/overlays/dev/infra/kubescape
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: kubescape
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

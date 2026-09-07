@@ -86,6 +86,13 @@ data:
         path: /var/lib/grafana/dashboards/kube-bench
       orgId: 1
       type: file
+    - disableDeletion: false
+      folder: kubescape
+      name: kubescape
+      options:
+        path: /var/lib/grafana/dashboards/kubescape
+      orgId: 1
+      type: file
 ---
 # Source: grafana/templates/service.yaml
 apiVersion: v1
@@ -169,6 +176,8 @@ spec:
               mountPath: "/var/lib/grafana/dashboards/istio-services"
             - name: dashboards-kube-bench
               mountPath: "/var/lib/grafana/dashboards/kube-bench"
+            - name: dashboards-kubescape
+              mountPath: "/var/lib/grafana/dashboards/kubescape"
             - name: config
               mountPath: "/etc/grafana/provisioning/datasources/datasources.yaml"
               subPath: "datasources.yaml"
@@ -232,6 +241,9 @@ spec:
         - name: dashboards-kube-bench
           configMap:
             name: kube-bench-grafana-dashboards
+        - name: dashboards-kubescape
+          configMap:
+            name: kubescape-grafana-dashboards
         - name: storage
           emptyDir: {}
 

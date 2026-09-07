@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - manifests.yaml
   - kube-bench-dashboard.yaml
+  - kubescape-dashboard.yaml
