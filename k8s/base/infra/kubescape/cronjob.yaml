@@ -34,6 +34,9 @@ spec:
                 - prometheus
                 - --output
                 - /results/metrics.prom
+                # kubescape's prometheus formatter appends .txt to whatever --output path
+                # is given, regardless of the extension already present, so the file that
+                # actually lands on disk is /results/metrics.prom.txt.
               env:
                 - name: HOME
                   value: /home/kubescape
@@ -53,7 +56,7 @@ spec:
                 - -c
                 - |
                   set -eu
-                  curl -sf --data-binary @/results/metrics.prom \
+                  curl -sf --data-binary @/results/metrics.prom.txt \
                     "http://kubescape-pushgateway.kubescape.svc.cluster.local:9091/metrics/job/kubescape/instance/cluster"
               securityContext:
                 allowPrivilegeEscalation: false
