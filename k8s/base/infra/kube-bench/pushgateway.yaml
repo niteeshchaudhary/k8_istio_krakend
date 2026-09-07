@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-bench-pushgateway
+  namespace: kube-bench
+  labels:
+    app.kubernetes.io/name: kube-bench-pushgateway
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-bench-pushgateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kube-bench-pushgateway
+        sidecar.istio.io/inject: "false"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9091"
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: pushgateway
+          image: prom/pushgateway:v1.11.3
+          ports:
+            - name: http
+              containerPort: 9091
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-bench-pushgateway
+  namespace: kube-bench
+  labels:
+    app.kubernetes.io/name: kube-bench-pushgateway
+spec:
+  selector:
+    app.kubernetes.io/name: kube-bench-pushgateway
+  ports:
+    - name: http
+      port: 9091
+      targetPort: http

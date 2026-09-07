@@ -1,0 +1,119 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kube-bench
+  namespace: kube-bench
+spec:
+  # Daily at 03:00. Adjust per environment in the overlay if a different cadence is needed.
+  schedule: "0 3 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 30
+  failedJobsHistoryLimit: 10
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: kube-bench
+            sidecar.istio.io/inject: "false"
+        spec:
+          serviceAccountName: kube-bench
+          restartPolicy: Never
+          hostPID: true
+          nodeSelector:
+            kubernetes.io/os: linux
+          initContainers:
+            - name: kube-bench-json
+              image: docker.io/aquasec/kube-bench:v0.16.0
+              command:
+                - kube-bench
+                - run
+                - --targets
+                - node,policies,managedservices,controlplane
+                - --benchmark
+                - eks-1.5.0
+                - --json
+                - --outputfile
+                - /results/report.json
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: results
+                  mountPath: /results
+                - name: var-lib-kubelet
+                  mountPath: /var/lib/kubelet
+                  readOnly: true
+                - name: etc-systemd
+                  mountPath: /etc/systemd
+                  readOnly: true
+                - name: etc-kubernetes
+                  mountPath: /etc/kubernetes
+                  readOnly: true
+            - name: push-metrics
+              image: docker.io/library/alpine:3.20
+              command: ["sh", "/scripts/push-metrics.sh"]
+              env:
+                - name: NODE_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: spec.nodeName
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: results
+                  mountPath: /results
+                - name: scripts
+                  mountPath: /scripts
+          containers:
+            # Human-readable report: this is what `kubectl logs job/<name> -n kube-bench` shows.
+            - name: kube-bench-report
+              image: docker.io/aquasec/kube-bench:v0.16.0
+              command:
+                - kube-bench
+                - run
+                - --targets
+                - node,policies,managedservices,controlplane
+                - --benchmark
+                - eks-1.5.0
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  memory: 256Mi
+              volumeMounts:
+                - name: var-lib-kubelet
+                  mountPath: /var/lib/kubelet
+                  readOnly: true
+                - name: etc-systemd
+                  mountPath: /etc/systemd
+                  readOnly: true
+                - name: etc-kubernetes
+                  mountPath: /etc/kubernetes
+                  readOnly: true
+          volumes:
+            - name: results
+              emptyDir: {}
+            - name: scripts
+              configMap:
+                name: kube-bench-scripts
+                defaultMode: 0555
+            - name: var-lib-kubelet
+              hostPath:
+                path: /var/lib/kubelet
+            - name: etc-systemd
+              hostPath:
+                path: /etc/systemd
+            - name: etc-kubernetes
+              hostPath:
+                path: /etc/kubernetes

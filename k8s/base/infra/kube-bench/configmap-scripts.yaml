@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-bench-scripts
+  namespace: kube-bench
+data:
+  push-metrics.sh: |
+    #!/bin/sh
+    set -eu
+
+    REPORT="/results/report.json"
+    METRICS="/results/metrics.prom"
+    GATEWAY_URL="http://kube-bench-pushgateway.kube-bench.svc.cluster.local:9091"
+
+    apk add --no-cache jq curl >/dev/null
+
+    # kube-bench --json prints an array of Controls objects, one per target
+    # (node, policies, managedservices, ...). Flatten every individual check
+    # result plus each section's pass/fail/warn/info counters into Prometheus
+    # exposition format so history/trends survive in Prometheus even though
+    # the Pushgateway itself only ever holds the latest push per node.
+    {
+      echo "# TYPE kube_bench_check_result gauge"
+      jq -r '
+        (if type == "array" then . else (.Controls // [.]) end) as $controls
+        | $controls[]
+        | .id as $cid | .node_type as $ntype
+        | (.tests // [])[]
+        | .section as $section
+        | (.results // [])[]
+        | [$cid, $ntype, $section, .test_number, .status,
+           (if .status == "PASS" then 1
+            elif .status == "WARN" then 0.5
+            elif .status == "FAIL" then 0
+            else -1 end)]
+        | @tsv
+      ' "$REPORT" | while IFS="$(printf '\t')" read -r cid ntype section check status value; do
+        printf 'kube_bench_check_result{control_id="%s",node_type="%s",section="%s",check="%s",status="%s"} %s\n' \
+          "$cid" "$ntype" "$section" "$check" "$status" "$value"
+      done
+
+      echo "# TYPE kube_bench_group_pass gauge"
+      echo "# TYPE kube_bench_group_fail gauge"
+      echo "# TYPE kube_bench_group_warn gauge"
+      echo "# TYPE kube_bench_group_info gauge"
+      jq -r '
+        (if type == "array" then . else (.Controls // [.]) end) as $controls
+        | $controls[]
+        | .id as $cid | .node_type as $ntype
+        | (.tests // [])[]
+        | [$cid, $ntype, .section, .pass, .fail, .warn, .info]
+        | @tsv
+      ' "$REPORT" | while IFS="$(printf '\t')" read -r cid ntype section pass fail warn info; do
+        printf 'kube_bench_group_pass{control_id="%s",node_type="%s",section="%s"} %s\n' "$cid" "$ntype" "$section" "$pass"
+        printf 'kube_bench_group_fail{control_id="%s",node_type="%s",section="%s"} %s\n' "$cid" "$ntype" "$section" "$fail"
+        printf 'kube_bench_group_warn{control_id="%s",node_type="%s",section="%s"} %s\n' "$cid" "$ntype" "$section" "$warn"
+        printf 'kube_bench_group_info{control_id="%s",node_type="%s",section="%s"} %s\n' "$cid" "$ntype" "$section" "$info"
+      done
+
+      echo "# TYPE kube_bench_run_timestamp_seconds gauge"
+      echo "kube_bench_run_timestamp_seconds $(date +%s)"
+    } > "$METRICS"
+
+    curl -sf --data-binary @"$METRICS" "${GATEWAY_URL}/metrics/job/kube-bench/node/${NODE_NAME}"
+    echo "Pushed $(wc -l < "$METRICS") metric lines to ${GATEWAY_URL} for node ${NODE_NAME}"
