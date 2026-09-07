@@ -71,7 +71,28 @@ spec:
                       else { acc = line; pending = 1 }
                     }
                     END { if (pending) print acc }
-                  ' /results/metrics.prom.txt > /results/metrics.pushgateway.prom
+                  ' /results/metrics.prom.txt > /results/metrics.step1.prom
+
+                  # kubescape also emits the same metric name + label set more than once
+                  # with different values for kubescape_resource_count_controls_* (e.g. one
+                  # count per framework evaluated against the same resource, with no label
+                  # to tell them apart), which Pushgateway rejects as a duplicate series.
+                  # Keep only the last value seen for each unique name+labels combination.
+                  awk '
+                    { line[NR] = $0
+                      if ($0 !~ /^#/ && $0 !~ /^[ \t]*$/) {
+                        key = $0; sub(/[ \t]+[^ \t]+$/, "", key)
+                        lastidx[key] = NR
+                      }
+                    }
+                    END {
+                      for (i = 1; i <= NR; i++) {
+                        if (line[i] ~ /^#/ || line[i] ~ /^[ \t]*$/) { print line[i]; continue }
+                        key = line[i]; sub(/[ \t]+[^ \t]+$/, "", key)
+                        if (lastidx[key] == i) print line[i]
+                      }
+                    }
+                  ' /results/metrics.step1.prom > /results/metrics.pushgateway.prom
 
                   HTTP_STATUS=$(curl -s -o /tmp/response.txt -w '%{http_code}' \
                     --data-binary @/results/metrics.pushgateway.prom "$GATEWAY_URL")
