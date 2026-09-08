@@ -19,6 +19,16 @@ spec:
     spec:
       serviceAccountName: alloy
       automountServiceAccountToken: true
+      securityContext:
+        # The image pre-creates /var/lib/alloy owned by its built-in "alloy"
+        # user (UID/GID 473), but mounting an emptyDir at /var/lib/alloy/data
+        # replaces that with a fresh volume instead. Pin the pod to the same
+        # UID/GID (with fsGroup so the mounted volume is writable by it) so
+        # Alloy can create its storage dir there regardless.
+        runAsNonRoot: true
+        runAsUser: 473
+        runAsGroup: 473
+        fsGroup: 473
       containers:
         - name: alloy
           image: grafana/alloy:v1.19.2
